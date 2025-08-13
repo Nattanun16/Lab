@@ -28,7 +28,7 @@ def find_gcd1(m, n): #ห.ร.ม. โดยการแยกตัวประ
 
 
 # ตัวอย่าง
-gcd1, ops1 = find_gcd1(60, 48)
+gcd1, ops1 = find_gcd1(60, 225)
 print("GCD1 =", gcd1, "Operations =", ops1)
 
 
@@ -49,11 +49,10 @@ def prime_factors_sieve(n, primes, counter): # ใช้ Sieve of Eratosthenes �
     factors = []
     for p in primes: #วนดูจำนวนเฉพาะที่ได้จาก Sieve
         counter[0] += 1
-        while n % p == 0: # ถ้า n หารด้วย p ลงตัว
-            counter[0] += 1
+        if n % p == 0: # ถ้า n หารด้วย p ลงตัว
             factors.append(p) # เก็บ p เป็นตัวประกอบ
             n //= p # หาร n ออกไป
-        if n == 1:
+        elif n == 1:
             break
     return factors
 
@@ -75,7 +74,7 @@ def find_gcd2(m, n): #ห.ร.ม. โดยใช้ Sieve of Eratosthenes
 
 
 # ตัวอย่าง
-gcd2, ops2 = find_gcd2(60, 48)
+gcd2, ops2 = find_gcd2(60, 225)
 print("GCD2 =", gcd2, "Operations =", ops2)
 
 
@@ -95,5 +94,5 @@ def find_gcd3(m, n): #ห.ร.ม. โดยใช้วิธี Euclidean algo
 
 
 # ตัวอย่าง
-gcd3, ops3 = find_gcd3(60, 48)
+gcd3, ops3 = find_gcd3(60, 225)
 print("GCD3 =", gcd3, "Operations =", ops3)
