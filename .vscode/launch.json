@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Subsets",
+      "request": "launch",
+      "mainClass": "Subsets",
+      "projectName": "Lab_322660c0"
+    },
+    {
+      "type": "java",
+      "name": "EvaluateExpression",
+      "request": "launch",
+      "mainClass": "EvaluateExpression",
+      "projectName": "Lab_322660c0"
+    },
+    {
+      "type": "java",
       "name": "BalancedBrackets",
       "request": "launch",
       "mainClass": "BalancedBrackets",
