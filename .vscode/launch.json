@@ -1,7 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
-    
+    {
+      "type": "java",
+      "name": "BalancedBrackets",
+      "request": "launch",
+      "mainClass": "BalancedBrackets",
+      "projectName": "Lab_322660c0"
+    },
     {
       "name": "Python Debugger: Current File",
       "type": "debugpy",
@@ -26,6 +32,6 @@
           "ignoreFailures": true
         }
       ]
-    },
+    }
   ]
 }
