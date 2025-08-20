@@ -4,92 +4,107 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class EvaluateExpression {
+
     public static int precedence(char op) {
         if (op == '+' || op == '-') return 1;
         if (op == '*' || op == '/') return 2;
         return 0;
     }
 
-    public static int applyOp(int a, int b, char op) {
+    public static double applyOp(double a, double b, char op) {
         switch (op) {
             case '+': return a + b;
             case '-': return a - b;
             case '*': return a * b;
-            case '/':
-                if (b == 0) throw new ArithmeticException("Divide by zero");
-                return a / b;
+            case '/': return a / b;
         }
         return 0;
     }
 
-    public static int evaluate(String expr) {
-        Stack<Integer> values = new Stack<>();
+    public static double evaluate(String expr) {
+        Stack<Double> values = new Stack<>();
         Stack<Character> ops = new Stack<>();
 
         for (int i = 0; i < expr.length(); i++) {
             char ch = expr.charAt(i);
+
             if (Character.isWhitespace(ch)) continue;
 
-            if (Character.isDigit(ch)) {
-                int val = 0;
-                while (i < expr.length() && Character.isDigit(expr.charAt(i))) {
-                    val = val * 10 + (expr.charAt(i) - '0');
+            // ตรวจจับตัวเลข (รวมถึงติดลบและทศนิยม)
+            if (Character.isDigit(ch) || ch == '.' ||
+                    (ch == '-' && (i == 0 || expr.charAt(i - 1) == '(' || "+-*/".indexOf(expr.charAt(i - 1)) != -1))) {
+
+                boolean negative = false;
+                if (ch == '-') {
+                    negative = true;
                     i++;
                 }
+
+                double val = 0;
+                boolean decimalFound = false;
+                double decimalDiv = 10;
+
+                while (i < expr.length() && (Character.isDigit(expr.charAt(i)) || expr.charAt(i) == '.')) {
+                    if (expr.charAt(i) == '.') {
+                        decimalFound = true;
+                        i++;
+                        continue;
+                    }
+                    int digit = expr.charAt(i) - '0';
+                    if (!decimalFound) {
+                        val = val * 10 + digit;
+                    } else {
+                        val += digit / decimalDiv;
+                        decimalDiv *= 10;
+                    }
+                    i++;
+                }
+
+                if (negative) val = -val;
                 values.push(val);
-                i--;
-            } else if (ch == '(') {
+                i--; // for-loop จะเพิ่ม i อีกที
+            }
+            else if (ch == '(') {
                 ops.push(ch);
-            } else if (ch == ')') {
+            }
+            else if (ch == ')') {
                 while (!ops.isEmpty() && ops.peek() != '(') {
-                    int b = values.pop();
-                    int a = values.pop();
+                    double b = values.pop();
+                    double a = values.pop();
                     values.push(applyOp(a, b, ops.pop()));
                 }
-                ops.pop();
-            } else { // operator
-                // handle unary minus เช่น -3 หรือ ( -2 )
-                if (ch == '-' && (i == 0 || expr.charAt(i-1) == '(' || "+-*/".indexOf(expr.charAt(i-1)) != -1)) {
-                    // unary minus: อ่านเลขถัดไปเป็นค่าติดลบ
-                    i++;
-                    int val = 0;
-                    while (i < expr.length() && Character.isDigit(expr.charAt(i))) {
-                        val = val * 10 + (expr.charAt(i) - '0');
-                        i++;
-                    }
-                    values.push(-val);
-                    i--;
-                } else {
-                    while (!ops.isEmpty() && precedence(ops.peek()) >= precedence(ch)) {
-                        int b = values.pop();
-                        int a = values.pop();
-                        values.push(applyOp(a, b, ops.pop()));
-                    }
-                    ops.push(ch);
+                ops.pop(); // ลบ '('
+            }
+            else { // operator
+                while (!ops.isEmpty() && precedence(ops.peek()) >= precedence(ch)) {
+                    double b = values.pop();
+                    double a = values.pop();
+                    values.push(applyOp(a, b, ops.pop()));
                 }
+                ops.push(ch);
             }
         }
 
         while (!ops.isEmpty()) {
-            int b = values.pop();
-            int a = values.pop();
+            double b = values.pop();
+            double a = values.pop();
             values.push(applyOp(a, b, ops.pop()));
         }
+
         return values.pop();
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("test_expression.txt"));
+        // อ่านไฟล์ที่เก็บ expression
+        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\2_Expression.txt"));
+        StringBuilder sb = new StringBuilder();
         while (sc.hasNextLine()) {
-            String expr = sc.nextLine().trim();
-            if (expr.isEmpty()) continue;
-            try {
-                int result = evaluate(expr);
-                System.out.println(expr + " = " + result);
-            } catch (Exception e) {
-                System.out.println(expr + " -> Error: " + e.getMessage());
-            }
+            sb.append(sc.nextLine()).append("\n");
         }
         sc.close();
+
+        String expr = sb.toString().trim();
+        System.out.println("Expression: " + expr);
+        System.out.println("Result = " + evaluate(expr));
     }
 }
