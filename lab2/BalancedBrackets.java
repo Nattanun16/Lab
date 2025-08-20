@@ -1,28 +1,41 @@
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.Stack;
 
-public class BalancedBrackets { 
-    public static boolean isBalanced(String str) { //เมธอดหลัก isBalanced คืนค่า true/false ว่าสมดุลไหม
-        Stack<Character> stack = new Stack<>(); //สร้าง Stack<Character> สำหรับเก็บวงเล็บเปิดที่เจอ
-        for (char ch: str.toCharArray()) { //วนลูปผ่านตัวอักษรในสตริง
-            //.toCharArray() แปลงสตริงเป็นอาร์เรย์ของตัวอักษร
-            if (ch == '(' || ch == '[' || ch == '{') { //ถ้าเป็น วงเล็บเปิด ให้ push ลงสแตก
+public class BalancedBrackets {
+    public static boolean isBalanced(String str) {
+        Stack<Character> stack = new Stack<>();
+        for (char ch : str.toCharArray()) {
+            if (ch == '(' || ch == '[' || ch == '{') {
                 stack.push(ch);
             } else if (ch == ')' || ch == ']' || ch == '}') {
-                if (stack.isEmpty()) return false; //ถ้าสต็กว่าง หมายถึงมีปิดก่อนเปิด false ทันที
-                char top = stack.pop(); //ไม่ว่าง ให้เอาของบนสุดออกมาตรวจ
+                if (stack.isEmpty()) return false;
+                char top = stack.pop();
                 if ((ch == ')' && top != '(') ||
-                    (ch == ']' && top != '[') ||
-                    (ch == '}' && top != '{')) {
-                    return false; //ตรวจว่าคู่ที่ pop ออกมาตรงกับชนิดวงเล็บปิดหรือไม่ ถ้าไม่ตรง → ลำดับการซ้อนผิด → false
+                        (ch == ']' && top != '[') ||
+                        (ch == '}' && top != '{')) {
+                    return false;
                 }
             }
         }
-        return stack.isEmpty(); //หลังวนครบทุกตัวอักษร ถ้า สแตกยังไม่ว่าง แปลว่ายังมีวงเล็บเปิดที่ไม่ถูกปิด false ทันที
-        //ถ้า สแตกว่าง แปลว่าทุกวงเล็บเปิดถูกปิดหมดแล้ว → true
+        return stack.isEmpty();
     }
 
-    public static void main(String[] args) {
-        String input = "Hello, World!";
-        System.out.println("The file is " + (isBalanced(input) ? "Balanced" : "Not Balanced"));
+    public static void main(String[] args) throws FileNotFoundException {
+        // อ่านไฟล์ .py ที่ชื่อ test_balance.py
+        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\test2.py"));
+        StringBuilder sb = new StringBuilder();
+        while (sc.hasNextLine()) {
+            sb.append(sc.nextLine());
+        }
+        sc.close();
+
+        String input = sb.toString();
+        if (isBalanced(input)) {
+            System.out.println("The file is balanced.");
+        } else {
+            System.out.println("The file is NOT balanced.");
+        }
     }
 }
