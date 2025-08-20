@@ -22,9 +22,43 @@ public class BalancedBrackets {
         return stack.isEmpty();
     }
 
+    public static String removeCommentsAndStrings(String code) {
+        StringBuilder cleaned = new StringBuilder();
+        boolean inString = false;
+        char stringChar = 0;
+        for (int i = 0; i < code.length(); i++) {
+            char ch = code.charAt(i);
+
+            // จัดการ comment (# ...)
+            if (!inString && ch == '#') {
+                while (i < code.length() && code.charAt(i) != '\n') {
+                    i++;
+                }
+                continue;
+            }
+
+            // จัดการ string ('...' หรือ "...")
+            if (!inString && (ch == '"' || ch == '\'')) {
+                inString = true;
+                stringChar = ch;
+                continue;
+            } else if (inString && ch == stringChar) {
+                inString = false;
+                continue;
+            }
+
+            // ถ้าไม่อยู่ใน string ให้เก็บตัวอักษร
+            if (!inString) {
+                cleaned.append(ch);
+            }
+        }
+        return cleaned.toString();
+    }
+
+
     public static void main(String[] args) throws FileNotFoundException {
         // อ่านไฟล์ .py ที่ชื่อ test_balance.py
-        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\test2.py"));
+        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\test10.py"));
         StringBuilder sb = new StringBuilder();
         while (sc.hasNextLine()) {
             sb.append(sc.nextLine());
@@ -32,6 +66,7 @@ public class BalancedBrackets {
         sc.close();
 
         String input = sb.toString();
+        input = removeCommentsAndStrings(input);
         if (isBalanced(input)) {
             System.out.println("The file is balanced.");
         } else {
