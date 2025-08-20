@@ -23,7 +23,7 @@ public class Subsets {
             System.out.println(sb.toString());
         }
 
-        // กรณีพิเศษ: พิมพ์ singleton sets ในรูปแบบ {{1},{2},...}
+        // กรณีพิเศษ: พิมพ์ singleton sets (เซตที่มีสมาชิกตัวเดียว) ในรูปแบบ {{1},{2},...}
         if (n > 0) { //ถ้า set ไม่ว่าง → สร้าง output แบบ singleton sets เช่น ถ้า {1,2,3} → ได้ {{1},{2},{3}} และใช้ , คั่นระหว่างแต่ละ subset
             StringBuilder singles = new StringBuilder();
             singles.append("{");
@@ -47,7 +47,7 @@ public class Subsets {
                     continue;
                 }
 
-                // ลบ { และ }
+                // ลบ { และ } ออก
                 line = line.replaceAll("[{}]", ""); //กรณี input มี element
                 if (line.isEmpty())
                     continue;
