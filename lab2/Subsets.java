@@ -29,8 +29,7 @@ public class Subsets {
 
             // ลบ { และ }
             line = line.replaceAll("[{}]", "");
-            if (line.isEmpty())
-                continue;
+            if (line.isEmpty()) continue;
 
             String[] parts = line.split(",");
             int[] arr = new int[parts.length];
