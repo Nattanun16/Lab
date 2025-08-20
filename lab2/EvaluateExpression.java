@@ -76,7 +76,7 @@ public class EvaluateExpression {
     }
 
     public static void main(String[] args) {
-        String expr = "10 + 2 * (6 - 4)";
+        String expr = "(1 + 2) * 3";
         System.out.println(expr + " = " + evaluate(expr));
     }
 }

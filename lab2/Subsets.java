@@ -23,7 +23,7 @@ public class Subsets {
     }
 
     public static void main(String[] args) {
-        int[] T = { 1, 2, 3 };
+        int[] T = { 1, 2,};
         generateSubsets(T);
     }
 }

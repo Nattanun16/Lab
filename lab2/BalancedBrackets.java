@@ -22,7 +22,7 @@ public class BalancedBrackets {
     }
 
     public static void main(String[] args) {
-        String input = "{[()]}";
-        System.out.println(input + " -> " + (isBalanced(input) ? "Balanced" : "Not Balanced"));
+        String input = "Hello, World!";
+        System.out.println("The file is " + (isBalanced(input) ? "Balanced" : "Not Balanced"));
     }
 }
