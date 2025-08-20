@@ -58,7 +58,7 @@ public class BalancedBrackets {
 
     public static void main(String[] args) throws FileNotFoundException {
         // อ่านไฟล์ .py ที่ชื่อ test_balance.py
-        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\test10.py"));
+        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\test4.py"));
         StringBuilder sb = new StringBuilder();
         while (sc.hasNextLine()) {
             sb.append(sc.nextLine());
