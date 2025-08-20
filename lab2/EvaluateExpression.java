@@ -12,13 +12,13 @@ public class EvaluateExpression {
     }
 
     public static double applyOp(double a, double b, char op) {
-        switch (op) {
-            case '+': return a + b;
-            case '-': return a - b;
-            case '*': return a * b;
-            case '/': return a / b;
-        }
-        return 0;
+        return switch (op) {
+            case '+' -> a + b;
+            case '-' -> a - b;
+            case '*' -> a * b;
+            case '/' -> a / b;
+            default -> 0;
+        };
     }
 
     public static double evaluate(String expr) {
@@ -96,12 +96,12 @@ public class EvaluateExpression {
 
     public static void main(String[] args) throws FileNotFoundException {
         // อ่านไฟล์ที่เก็บ expression
-        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\2_Expression.txt"));
         StringBuilder sb = new StringBuilder();
-        while (sc.hasNextLine()) {
-            sb.append(sc.nextLine()).append("\n");
+        try (Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\2_Expression.txt"))) {
+            while (sc.hasNextLine()) {
+                sb.append(sc.nextLine()).append("\n");
+            }
         }
-        sc.close();
 
         String expr = sb.toString().trim();
         System.out.println("Expression: " + expr);

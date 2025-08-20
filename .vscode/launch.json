@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "BalanceChecker",
+      "request": "launch",
+      "mainClass": "BalanceChecker",
+      "projectName": "Lab_322660c0"
+    },
+    {
+      "type": "java",
       "name": "Subsets",
       "request": "launch",
       "mainClass": "Subsets",

@@ -38,29 +38,29 @@ public class Subsets {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\SetT.txt")); //เปิดไฟล์เพื่ออ่านชุดข้อมูล
-        while (sc.hasNextLine()) {
-            String line = sc.nextLine().trim();
-            if (line.equals("{}") || line.isEmpty()) { //ถ้าเป็น {} หรือบรรทัดว่าง → แสดงว่าไม่มีชุดข้อมูล ให้แสดงผล subset ของ empty set
-                System.out.println("Subsets of {}:");
-                generateSubsets(new int[0]);
-                continue;
+        try (Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\SetT.txt"))) { //เปิดไฟล์เพื่ออ่านชุดข้อมูล
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+                if (line.equals("{}") || line.isEmpty()) { //ถ้าเป็น {} หรือบรรทัดว่าง → แสดงว่าไม่มีชุดข้อมูล ให้แสดงผล subset ของ empty set
+                    System.out.println("Subsets of {}:");
+                    generateSubsets(new int[0]);
+                    continue;
+                }
+
+                // ลบ { และ }
+                line = line.replaceAll("[{}]", ""); //กรณี input มี element
+                if (line.isEmpty())
+                    continue;
+
+                String[] parts = line.split(",");
+                int[] arr = new int[parts.length];
+                for (int i = 0; i < parts.length; i++) {
+                    arr[i] = Integer.parseInt(parts[i].trim());
+                } //ตัด { และ } ออก split ด้วย , แล้วแปลงเป็น int[]
+
+                System.out.println("Subsets of {" + String.join(",", parts) + "} :");
+                generateSubsets(arr);
             }
-
-            // ลบ { และ }
-            line = line.replaceAll("[{}]", ""); //กรณี input มี element
-            if (line.isEmpty())
-                continue;
-
-            String[] parts = line.split(",");
-            int[] arr = new int[parts.length];
-            for (int i = 0; i < parts.length; i++) {
-                arr[i] = Integer.parseInt(parts[i].trim());
-            } //ตัด { และ } ออก split ด้วย , แล้วแปลงเป็น int[]
-
-            System.out.println("Subsets of {" + String.join(",", parts) + "} :");
-            generateSubsets(arr);
         }
-        sc.close();
     }
 }
