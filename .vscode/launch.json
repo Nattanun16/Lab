@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ExpressionTreeLab3",
+      "request": "launch",
+      "mainClass": "ExpressionTreeLab3",
+      "projectName": "Lab_322660c0"
+    },
+    {
+      "type": "java",
       "name": "BalanceChecker",
       "request": "launch",
       "mainClass": "BalanceChecker",
