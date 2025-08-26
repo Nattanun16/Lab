@@ -9,7 +9,7 @@ class Node:
 
 # ตรวจสอบว่าเป็นตัวดำเนินการหรือไม่
 def is_operator(c):
-    return c in ['+', '-', '*', '/', '^']
+    return c in ['+', '-', '*', '/', '^'] 
 
 # แปลง Infix เป็น Postfix (Shunting-yard algorithm)
 def infix_to_postfix(expression):
@@ -24,11 +24,16 @@ def infix_to_postfix(expression):
         elif token == '(': # ถ้าเป็น '(' → ใส่ใน stack
             stack.append(token)
         elif token == ')': # ถ้าเป็น ')' → pop จาก stack ไป output จนเจอ '('
-            while stack and stack[-1] != '(':
-                output.append(stack.pop())
+            while stack and stack[-1] != '(': 
+                output.append(stack.pop()) # pop จาก stack ไป output
             stack.pop()  # ลบ '(' ออก
         else:  # operator
             while stack and stack[-1] != '(' and precedence.get(stack[-1], 0) >= precedence[token]: # pop จาก stack ไป output จนเจอ '(' หรือ operator ที่มีลำดับความสำคัญต่ำกว่า
+                # while stack ตรวจสอบว่า stack ไม่ว่าง ถ้า stack ว่าง เราไม่สามารถดู stack[-1] ได้
+                # stack[-1] != '(' ตรวจสอบว่าเครื่องหมายบนสุดไม่ใช่วงเล็บซ้าย
+                # precedence.get(stack[-1], 0) >= precedence[token] ตรวจสอบลำดับความสำคัญของ operator ถ้า operator บน stack มีความสำคัญ สูงกว่าหรือเท่ากับ operator ปัจจุบัน → pop ออกไปก่อน เพื่อรักษาลำดับที่ถูกต้อง
+                # precedence เป็น dict ที่เก็บลำดับความสำคัญของ operator
+                # get(stack[-1], 0) ใช้เพื่อดึงค่าลำดับความสำคัญของ operator บน stack ถ้าไม่เจอจะคืนค่า 0 แทน
                 output.append(stack.pop())
             stack.append(token) # ใส่ operator ปัจจุบันลง stack
 
