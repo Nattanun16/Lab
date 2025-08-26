@@ -1,8 +1,8 @@
 import operator
 
 # Node class for Expression Tree
-class Node:
-    def __init__(self, value):
+class Node: 
+    def __init__(self, value): 
         self.value = value
         self.left = None
         self.right = None
