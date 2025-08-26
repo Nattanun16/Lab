@@ -1,103 +1,103 @@
 import operator
 
-# นิยามโครงสร้าง Node ของ Expression Tree
+# Node class for Expression Tree
 class Node:
     def __init__(self, value):
-        self.value = value #ค่าของตัวเลขหรือตัวดำเนินการ
-        self.left = None #ชี้ไปยังลูกซ้าย
-        self.right = None #ชี้ไปยังลูกขวา
+        self.value = value
+        self.left = None
+        self.right = None
 
-# ตรวจสอบว่าเป็นตัวดำเนินการหรือไม่
+# Function to check if a token is an operator
 def is_operator(c):
-    return c in ['+', '-', '*', '/', '^'] 
+    return c in ['+', '-', '*', '/']
 
-# แปลง Infix เป็น Postfix (Shunting-yard algorithm)
+# Convert infix expression to postfix (using Shunting Yard algorithm)
 def infix_to_postfix(expression):
-    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3} # กำหนดลำดับความสำคัญของตัวดำเนินการ
-    output = [] # เก็บผลลัพธ์ Postfix
-    stack = [] #เก็บเครื่องหมาย
-    tokens = expression.replace('(', ' ( ').replace(')', ' ) ').split() #ตัด string ออกเป็น token (โดยเว้นวรรคเพื่อให้แยกวงเล็บและตัวเลขได้)
-
-    for token in tokens: #วนอ่านแต่ละ token
-        if token.isnumeric():  # ถ้าเป็นตัวเลข → ใส่ใน output
+    precedence = {'+':1, '-':1, '*':2, '/':2}
+    output = []
+    stack = []
+    tokens = expression.replace('(',' ( ').replace(')',' ) ').split()
+    
+    for token in tokens:
+        if token.isdigit():
             output.append(token)
-        elif token == '(': # ถ้าเป็น '(' → ใส่ใน stack
+        elif token == '(':
             stack.append(token)
-        elif token == ')': # ถ้าเป็น ')' → pop จาก stack ไป output จนเจอ '('
-            while stack and stack[-1] != '(': 
-                output.append(stack.pop()) # pop จาก stack ไป output
-            stack.pop()  # ลบ '(' ออก
-        else:  # operator
-            while stack and stack[-1] != '(' and precedence.get(stack[-1], 0) >= precedence[token]: # pop จาก stack ไป output จนเจอ '(' หรือ operator ที่มีลำดับความสำคัญต่ำกว่า
-                # while stack ตรวจสอบว่า stack ไม่ว่าง ถ้า stack ว่าง เราไม่สามารถดู stack[-1] ได้
-                # stack[-1] != '(' ตรวจสอบว่าเครื่องหมายบนสุดไม่ใช่วงเล็บซ้าย
-                # precedence.get(stack[-1], 0) >= precedence[token] ตรวจสอบลำดับความสำคัญของ operator ถ้า operator บน stack มีความสำคัญ สูงกว่าหรือเท่ากับ operator ปัจจุบัน → pop ออกไปก่อน เพื่อรักษาลำดับที่ถูกต้อง
-                # precedence เป็น dict ที่เก็บลำดับความสำคัญของ operator
-                # get(stack[-1], 0) ใช้เพื่อดึงค่าลำดับความสำคัญของ operator บน stack ถ้าไม่เจอจะคืนค่า 0 แทน
+        elif token == ')':
+            while stack and stack[-1] != '(':
                 output.append(stack.pop())
-            stack.append(token) # ใส่ operator ปัจจุบันลง stack
-
-    while stack: # pop เครื่องหมายที่เหลือใน stack ไป output
+            stack.pop()
+        elif is_operator(token):
+            while stack and stack[-1] != '(' and precedence[stack[-1]] >= precedence[token]:
+                output.append(stack.pop())
+            stack.append(token)
+    while stack:
         output.append(stack.pop())
     return output
 
-# สร้าง Expression Tree จาก Postfix
-def construct_tree(postfix):
-    stack = [] # ใช้ stack ในการสร้าง tree
-    for token in postfix: # วนอ่านแต่ละ token
-        if not is_operator(token): # ถ้าเป็นตัวเลข → สร้าง Node และใส่ใน stack
-            stack.append(Node(token)) # สร้าง Node และใส่ใน stack
-        else: # ถ้าเป็น operator → pop สอง Node จาก stack มาเป็นลูกของ Node ใหม่ แล้วใส่ Node ใหม่กลับใน stack
-            right = stack.pop() # pop สอง Node จาก stack
-            left = stack.pop() 
-            node = Node(token) # สร้าง Node ใหม่
-            node.left = left  #กำหนดลูกซ้ายและขวา
-            node.right = right #กำหนดลูกซ้ายและขวา
-            stack.append(node) # ใส่ Node ใหม่กลับใน stack
-    return stack.pop() # Node สุดท้ายใน stack คือ root ของ tree
+# Build expression tree from postfix expression
+def build_expression_tree(postfix):
+    stack = []
+    for token in postfix:
+        if not is_operator(token):
+            stack.append(Node(token))
+        else:
+            node = Node(token)
+            node.right = stack.pop()
+            node.left = stack.pop()
+            stack.append(node)
+    return stack[-1]
 
-# Traversal ต่างๆ
-def inorder(node): #ใช้ recursion เดิน tree แล้วคืนค่า list ของ traversal
-    if node is None: # base case
+# Traversals
+def inorder(node):
+    if node is None:
         return []
-    return inorder(node.left) + [node.value] + inorder(node.right) # เดินลูกซ้าย → root → ลูกขวา
+    return inorder(node.left) + [node.value] + inorder(node.right)
 
-def preorder(node): #ใช้ recursion เดิน tree แล้วคืนค่า list ของ traversal
+def preorder(node):
     if node is None:
         return []
     return [node.value] + preorder(node.left) + preorder(node.right)
 
-def postorder(node): #ใช้ recursion เดิน tree แล้วคืนค่า list ของ traversal
+def postorder(node):
     if node is None:
         return []
     return postorder(node.left) + postorder(node.right) + [node.value]
 
-# คำนวณค่าจาก Postorder โดยใช้ stack
-def evaluate_postorder(postfix): #ใช้ stack ประเมินค่าจาก postfix: ถ้าเจอเลข push, เจอ operator pop 2 ค่า แล้วคำนวณ
+# Evaluate expression tree using postorder traversal
+def evaluate_postorder(postfix):
     stack = []
-    ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv, '^': operator.pow} # mapping ตัวดำเนินการกับฟังก์ชัน
-    for token in postfix: 
-        if not is_operator(token): # ถ้าเป็นตัวเลข → push ลง stack
-            stack.append(float(token)) # แปลงเป็น float เพื่อรองรับการหาร
-        else: # ถ้าเป็น operator → pop สองค่า, คำนวณ, แล้ว push ผลลัพธ์ลง stack
-            b = stack.pop() 
+    ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv}
+    for token in postfix:
+        if token not in ops:
+            stack.append(int(token))
+        else:
+            b = stack.pop()
             a = stack.pop()
-            stack.append(ops[token](a, b)) # คำนวณและ push ผลลัพธ์
-    return stack.pop()
+            stack.append(ops[token](a, b))
+    return stack[0]
 
-# --- main program ---
+# Main Program
+def process_expression(expression):
+    postfix = infix_to_postfix(expression)
+    tree_root = build_expression_tree(postfix)
+    in_ord = inorder(tree_root)
+    pre_ord = preorder(tree_root)
+    post_ord = postorder(tree_root)
+    value = evaluate_postorder(post_ord)
+    return in_ord, pre_ord, post_ord, value
+
+# Read file and process
 with open("C:\\Users\\user\\Downloads\\Lab_3 example.txt", 'r') as f:
     lines = f.readlines()
 
-for expr in lines: # อ่านแต่ละบรรทัดในไฟล์
-    expr = expr.strip() # ลบช่องว่างและ newline
-    if not expr: 
-        continue # ข้ามบรรทัดว่าง
-    postfix = infix_to_postfix(expr) # แปลงเป็น postfix
-    tree = construct_tree(postfix) # สร้าง expression tree
-    print(f"Expression: {expr}") # แสดงผลลัพธ์
-    print("Inorder: ", ' '.join(inorder(tree))) # join list เป็น string โดยมีช่องว่างคั่น
-    print("Preorder:", ' '.join(preorder(tree))) # join list เป็น string โดยมีช่องว่างคั่น
-    print("Postorder:", ' '.join(postorder(tree))) # join list เป็น string โดยมีช่องว่างคั่น
-    print("Result:", evaluate_postorder(postorder(tree))) # ประเมินค่าจาก postorder
-    print("------")
+for expr in lines:
+    expr = expr.strip()
+    if expr:
+        in_ord, pre_ord, post_ord, value = process_expression(expr)
+        print(f"Expression: {expr}")
+        print("Inorder:", ' '.join(in_ord))
+        print("Preorder:", ' '.join(pre_ord))
+        print("Postorder:", ' '.join(post_ord))
+        print("Result:", value)
+        print('-'*40)
