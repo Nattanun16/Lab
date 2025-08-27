@@ -2,7 +2,7 @@ import operator
 
 # ---------- Node class สำหรับ Expression Tree ----------
 class Node:
-    def __init__(self, value):
+    def __init__(self, value): # กำหนดคลาส Node สำหรับเก็บโหนดของ Binary Expression Tree
         self.value = value
         self.left = None
         self.right = None
@@ -81,7 +81,7 @@ def process_expression(expression):
     return in_ord, pre_ord, post_ord, value
 
 # ---------- อ่านไฟล์และแสดงผล ----------
-with open("C:\\Users\\user\\Downloads\\lab3_test_case_2025.txt", 'r') as f:
+with open("C:\\Users\\user\\Downloads\\lab3_test_case.txt", 'r') as f:
     lines = f.readlines()
 
 for expr in lines:

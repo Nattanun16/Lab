@@ -58,8 +58,8 @@ public class Subsets {
                     arr[i] = Integer.parseInt(parts[i].trim());
                 } //ตัด { และ } ออก split ด้วย , แล้วแปลงเป็น int[]
 
-                System.out.println("Subsets of {" + String.join(",", parts) + "} :");
-                generateSubsets(arr);
+                System.out.println("Subsets of {" + String.join(",", parts) + "} :"); //แสดงผล subset ของ set ที่อ่านมา
+                generateSubsets(arr); //เรียกฟังก์ชัน generateSubsets เพื่อแสดง subset
             }
         }
     }
