@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+ //ใช้ Array กับ ArrayList
 public class Subsets {
     // สำหรับเซตของจำนวนเต็ม (เช่น {1,2,3})
     public static void generateSubsets(int[] set) { // รับ array ของจำนวนเต็ม
@@ -75,7 +75,7 @@ public class Subsets {
                         tokens.add("{" + num + "}"); // เก็บในรูปแบบ "{number"
                     }
                     System.out.println("Subsets of " + line + " :"); // พิมพ์หัวข้อ
-                    generateSubsetsOfTokens(tokens.toArray(new String[0])); // พิมพ์เซตย่อย
+                    generateSubsetsOfTokens(tokens.toArray(String[]::new)); // พิมพ์เซตย่อย
                     continue; // ข้ามไปบรรทัดถัดไป
                 }
 
