@@ -88,7 +88,7 @@ def process_expression(expression): #ฟังก์ชันหลักใน�
     return in_ord, pre_ord, post_ord, value #คืนค่าผลลัพธ์ทั้งหมด
 
 # Read file and process
-with open("C:\\Users\\user\\Downloads\\Lab_3 example.txt", 'r') as f:
+with open("C:\\Users\\user\\Downloads\\lab3_test_case_2025.txt", 'r') as f:
     lines = f.readlines()
 
 for expr in lines:
