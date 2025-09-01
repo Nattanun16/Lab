@@ -1,14 +1,14 @@
-def greedy(grab_string, k):
-    n = len(grab_string)
-    taken = [False] * n
-    max_rides = 0
+def greedy(grab_string, k): # ฟังก์ชัน greedy ที่รับ grab_string สตริงที่มีตัวอักษร G (Grab) และ P (Passenger)
+    #และ k :ซึ่งเป็นระยะสูงสุดที่ Grab สามารถรับผู้โดยสารได้ เป็นพารามิเตอร์
+    n = len(grab_string) #หาความยาวของ string (จำนวนตำแหน่งทั้งหมด) เก็บไว้ในตัวแปร n
+    taken = [False] * n #สร้าง list ขนาด n ที่มีค่าเป็น False ทั้งหมด ใช้เก็บสถานะของผู้โดยสารว่า ถูกจับคู่แล้วหรือยัง
+    max_rides = 0 # ตัวแปร max_rides เพื่อเก็บจำนวนผู้โดยสารสูงสุดที่สามารถรับได้ โดยเริ่มต้นที่ 0
 
-    for i in range(n):
-        if grab_string[i] == "G":
-            # พยายามหาผู้โดยสารในช่วง [i-k, i+k]
-            for j in range(max(0, i - k), min(n, i + k + 1)):
-                if grab_string[j] == "P" and not taken[j]:
-                    taken[j] = True
-                    max_rides += 1
-                    break
-    print(max_rides)
+    for i in range(n): #วนลูป ทุกตำแหน่งใน string (index 0 ถึง n-1)
+        if grab_string[i] == "G": #ถ้าตำแหน่งปัจจุบันเป็น Grab (G) เราจะพยายามหาผู้โดยสารให้ Grab คันนี้
+            for j in range(max(0, i - k), min(n, i + k + 1)): ## พยายามหาผู้โดยสารในช่วง [i-k, i+k] โดย max(0, i-k) เพื่อไม่ให้ออกนอกขอบเขตด้านซ้าย (index < 0) และ min(n, i+k+1) เพื่อไม่ให้ออกนอกขอบเขตด้านขวา (index >= n)
+                if grab_string[j] == "P" and not taken[j]: #ถ้าเจอตำแหน่งที่เป็น ผู้โดยสาร (P) และยังไม่ถูกจับคู่ (not taken[j])
+                    taken[j] = True #กำหนดว่า ผู้โดยสารตำแหน่งนี้ถูกจับคู่แล้ว (True)
+                    max_rides += 1 #เพิ่มจำนวนผู้โดยสารที่ขึ้น Grab ได้ 1 คน
+                    break #ออกจากลูปการค้นหา ผู้โดยสารสำหรับ Grab คันนี้
+    print(max_rides) #แสดงผลจำนวนผู้โดยสารสูงสุดที่สามารถขึ้น Grab ได้ ด้วยวิธี Greedy
