@@ -48,9 +48,10 @@
       "type": "cppdbg",
       "request": "launch",
       "args": [],
+      "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/OS/OneDrive - Chulalongkorn University/Desktop/Lab",
-      "program": "${workspaceFolder}/build/Debug/main.exe",
+      "cwd": "/response_8da55e4d-0057-4e0c-8ac5-3e525d44c742",
+      "program": "/response_8da55e4d-0057-4e0c-8ac5-3e525d44c742/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

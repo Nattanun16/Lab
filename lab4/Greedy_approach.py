@@ -21,7 +21,7 @@ def greedy(
 
 
 if __name__ == "__main__":
-    with open("C:\\Users\\user\\Downloads\\4.1.1.txt") as f:
+    with open("C:\\Users\\user\\Downloads\\4.5.3.txt") as f:
         arr = f.readline().strip()
         k = int(f.readline().strip())
 
