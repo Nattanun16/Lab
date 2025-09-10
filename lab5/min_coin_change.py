@@ -62,7 +62,7 @@ def run_from_file(filename): #อ่านข้อมูลจากไฟล�
             print(f"เหรียญที่ใช้ = {used_coins}") #แสดงรายการเหรียญที่ใช้
 
         print("Lookup Table (2D):") #แสดงตาราง lookup
-        header = ["C\\A"] + list(range(amount + 1)) #หัวตาราง
+        header = ["C\\A"] + list(range(amount + 1)) #หัวตาราง C = coins, A = amount
         print("\t".join(map(str, header))) #แสดงหัวตาราง
         for idx, row in enumerate(table): #แสดงแต่ละแถวในตาราง
             row_display = [str(idx)] + [str(cell) for cell in row] #แปลงค่าทุกค่าในแถวเป็นสตริง
@@ -70,4 +70,4 @@ def run_from_file(filename): #อ่านข้อมูลจากไฟล�
 
 
 if __name__ == "__main__":
-    run_from_file("C:\\Users\\user\\Downloads\\5.1.txt")
+    run_from_file("C:\\Users\\user\\Downloads\\5.14.txt")
