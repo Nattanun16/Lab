@@ -70,7 +70,7 @@ def print_solution(polygon, triangles): # แสดงผลลัพธ์ก�
         print(f"  Triangle: ({polygon[i]}, {polygon[k]}, {polygon[j]})") # แสดงพิกัดของสามเหลี่ยม
 
 if __name__ == "__main__":
-    filename = "C:\\Users\\user\\Downloads\\1.1.txt"
+    filename = "C:\\Users\\user\\Downloads\\6.txt"
     polygon = read_polygon_from_file(filename)
 
     min_cost, min_sol = triangulation(polygon, find_max=False) # หา min triangulation
