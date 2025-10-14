@@ -14,7 +14,7 @@
             ]
         },
         {
-            "name": "windows-gcc-x64",
+            "name": "windows-gcc-x64-debug",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
