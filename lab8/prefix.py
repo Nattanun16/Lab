@@ -45,7 +45,7 @@ def kmp_search(pat, text):  # ค้นหา pattern ใน text โดยใ�
 
 
 def main():
-    file_path = "C:\\Users\\user\\Downloads\\8.1.txt"
+    file_path = "C:\\Users\\user\\Downloads\\8.8.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().splitlines() # อ่านบรรทัดทั้งหมดจากไฟล์
