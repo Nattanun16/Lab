@@ -1,6 +1,7 @@
 import sys
 import matplotlib.pyplot as plt  # ใช้สำหรับสร้างกราฟ
 
+
 def parse_tokens(line, expected_len=None):
     parts = line.strip().split()
     if expected_len is not None and len(parts) == 1 and len(parts[0]) == expected_len:
@@ -52,48 +53,30 @@ def naive_search_rl_via_rev(pat, text):
     return [a + m - 1 for a in res_a]
 
 
-def visualize_prefix(pattern, pi):
-    """แสดงตารางและกราฟของ prefix function"""
-    print("\n📊 Prefix Function Table (KMP π)")
-    print("Index   :", " ".join(f"{i:>2}" for i in range(len(pattern))))
-    print("Pattern :", " ".join(f"{c:>2}" for c in pattern))
-    print("π value :", " ".join(f"{p:>2}" for p in pi))
-
-    # วาดกราฟแท่งของ prefix function
-    plt.figure(figsize=(10, 5))
-    plt.bar(range(len(pi)), pi, tick_label=pattern, color='skyblue', edgecolor='black')
-    plt.title("KMP Prefix Function (π Table)")
-    plt.xlabel("Pattern characters")
-    plt.ylabel("π value")
-    plt.grid(axis='y', linestyle='--', alpha=0.6)
-
-    # แสดงค่าตัวเลขบนกราฟ
-    for i, val in enumerate(pi):
-        plt.text(i, val + 0.1, str(val), ha='center', va='bottom', fontsize=10)
-
+def plot_prefix_table(pi):
+    plt.figure(figsize=(8, 4))
+    plt.plot(range(1, len(pi) + 1), pi, marker="o", linestyle="-", color="blue")
+    plt.title("Prefix Function Table (pi)")
+    plt.xlabel("Pattern Position")
+    plt.ylabel("Prefix Length")
+    plt.grid(True)
+    plt.xticks(range(1, len(pi) + 1))
     plt.tight_layout()
     plt.show()
 
 
-def visualize_matches(text, pattern, lr_positions, rl_positions):
-    """แสดงกราฟตำแหน่ง Match ทั้งแบบ LR และ RL"""
-    n = len(text)
-    plt.figure(figsize=(10, 3))
-    plt.title("ตำแหน่งการ Match ของ Pattern ใน Text")
+def plot_match_positions(matches, n):
+    plt.figure(figsize=(10, 4))
+    positions = [pos for pos, _ in matches]
+    directions = [1 if d == "LR" else -1 for _, d in matches]
+    colors = ["green" if d == "LR" else "red" for _, d in matches]
 
-    # Plot text บนแกน x
-    plt.plot(range(1, n + 1), [0]*n, 'ko', markersize=4, label="Text")
-
-    # Plot ตำแหน่ง match
-    for p in lr_positions:
-        plt.plot(p, 0, 'go', markersize=10, label="LR Match" if p == lr_positions[0] else "")
-    for p in rl_positions:
-        plt.plot(p, 0, 'ro', markersize=10, label="RL Match" if p == rl_positions[0] else "")
-
-    plt.yticks([])
-    plt.xlabel("ตำแหน่งในข้อความ (Text index)")
-    plt.legend()
-    plt.grid(axis='x', linestyle='--', alpha=0.6)
+    plt.scatter(positions, directions, c=colors, s=100)
+    plt.yticks([-1, 1], ["RL", "LR"])
+    plt.xticks(range(1, n + 1))
+    plt.title("Match Positions in Text")
+    plt.xlabel("Text Position (1-based)")
+    plt.grid(True)
     plt.tight_layout()
     plt.show()
 
@@ -141,8 +124,8 @@ def main():
         print(f"{pos} {d}")
 
     # ✅ แสดง Visualization
-    visualize_prefix(pattern, pi)
-    visualize_matches(text, pattern, lr_positions, rl_positions)
+    plot_prefix_table(pi)
+    plot_match_positions(matches, n)
 
 
 if __name__ == "__main__":

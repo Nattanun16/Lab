@@ -26,7 +26,7 @@ def compute_prefix(pat):  # คำนวณตาราง prefix function (pi) 
 def naive_search_lr_wrap(pat, text):  # ค้นหา pattern ใน text แบบ naive จากซ้ายไปขวา
     m = len(pat)  # ความยาวของ pattern
     n = len(text)  # ความยาวของ text
-    text_wrap = text + text[:m - 1]  # ต่อ text เพื่อรองรับการวนรอบ
+    text_wrap = text + text[: m - 1]  # ต่อ text เพื่อรองรับการวนรอบ
     res = []  # เก็บตำแหน่งที่พบ match (1-based)
     for s in range(n + m - 1):  # วนตำแหน่งเริ่มต้น s ใน text
         ok = True  # สมมติว่าแมตช์ได้
@@ -45,7 +45,7 @@ def naive_search_rl_wrap(
     pat_rev = pat[::-1]  # พลิกลำดับ pattern
     m = len(pat)  # ความยาวของ pattern
     n = len(text)  # ความยาวของ text
-    text_wrap = text + text[:m - 1] # ต่อ text เพื่อรองรับการวนรอบ
+    text_wrap = text + text[: m - 1]  # ต่อ text เพื่อรองรับการวนรอบ
     res = []  # เก็บตำแหน่งเริ่มต้นของ match กับ pat_rev (1-based)
     for s in range(n + m - 1):  # วนตำแหน่งเริ่มต้น s ใน text
         ok = True
@@ -63,12 +63,12 @@ def main():
     file_path = "C:\\Users\\user\\Downloads\\8.7.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            lines = f.read().strip().splitlines() # อ่านบรรทัดทั้งหมดจากไฟล์
+            lines = f.read().strip().splitlines()  # อ่านบรรทัดทั้งหมดจากไฟล์
     except FileNotFoundError:
-        print(f"ไม่พบไฟล์: {file_path}") # แจ้งข้อผิดพลาดถ้าไฟล์ไม่พบ
+        print(f"ไม่พบไฟล์: {file_path}")  # แจ้งข้อผิดพลาดถ้าไฟล์ไม่พบ
         return
 
-    if len(lines) < 4: # ตรวจสอบว่ามีบรรทัดครบ 4 บรรทัดหรือไม่
+    if len(lines) < 4:  # ตรวจสอบว่ามีบรรทัดครบ 4 บรรทัดหรือไม่
         print("ไฟล์ต้องมีอย่างน้อย 4 บรรทัด (charset, m n, pattern, text)")
         return
     line1 = lines[0].strip()  # เผื่อมี charset
@@ -76,31 +76,33 @@ def main():
     line3 = lines[2].strip()  # pattern
     line4 = lines[3].strip()  # text
 
-    parts = line2.split() # แยก m n
-    m = int(parts[0]) # แปลง string เป็น integer
-    n = int(parts[1]) # แปลง string เป็น integer
+    parts = line2.split()  # แยก m n
+    m = int(parts[0])  # แปลง string เป็น integer
+    n = int(parts[1])  # แปลง string เป็น integer
 
-    pattern = parse_tokens(line3, expected_len=m) # แปลง pattern เป็นลิสต์โทเค็นหรือตัวอักษร
-    text = parse_tokens(line4, expected_len=n) # แปลง text เป็นลิสต์โทเค็นหรือตัวอักษร
+    pattern = parse_tokens(line3, expected_len=m)  # แปลง pattern เป็นลิสต์โทเค็นหรือตัวอักษร
+    text = parse_tokens(line4, expected_len=n)  # แปลง text เป็นลิสต์โทเค็นหรือตัวอักษร
 
-    pi = compute_prefix(pattern) # คำนวณตาราง prefix function
+    pi = compute_prefix(pattern)  # คำนวณตาราง prefix function
 
     # ค้นหา LR และ RL แบบ naive
-    lr_positions = naive_search_lr_wrap(pattern, text) # หา match แบบ LR
+    lr_positions = naive_search_lr_wrap(pattern, text)  # หา match แบบ LR
     rl_positions = naive_search_rl_wrap(pattern, text)  # หา match แบบ RL
 
-    matches = [] # รวมผลลัพธ์และเรียง
+    matches = []  # รวมผลลัพธ์และเรียง
     for p in lr_positions:
-        matches.append((p, "LR")) # เพิ่มตำแหน่ง LR
+        matches.append((p, "LR"))  # เพิ่มตำแหน่ง LR
     for p in rl_positions:
-        matches.append((p, "RL")) # เพิ่มตำแหน่ง RL
-    matches.sort(key=lambda x: (x[0], 0 if x[1] == "LR" else 1)) # จัดเรียงผลลัพธ์ตามตำแหน่ง และถ้าตำแหน่งเท่ากันให้ LR มาก่อน RL
+        matches.append((p, "RL"))  # เพิ่มตำแหน่ง RL
+    matches.sort(
+        key=lambda x: (x[0], 0 if x[1] == "LR" else 1)
+    )  # จัดเรียงผลลัพธ์ตามตำแหน่ง และถ้าตำแหน่งเท่ากันให้ LR มาก่อน RL
 
     # แสดงผลทางหน้าจอ
-    print(" ".join(str(x) for x in pi)) # พิมพ์ตาราง prefix function
-    print(len(matches)) # พิมพ์จำนวน match ที่พบ
+    print(" ".join(str(x) for x in pi))  # พิมพ์ตาราง prefix function
+    print(len(matches))  # พิมพ์จำนวน match ที่พบ
     for pos, d in matches:
-        print(f"{pos} {d}") # พิมพ์ตำแหน่งและทิศทางของแต่ละการแมตช์
+        print(f"{pos} {d}")  # พิมพ์ตำแหน่งและทิศทางของแต่ละการแมตช์
 
 
 if __name__ == "__main__":
