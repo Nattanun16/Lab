@@ -23,41 +23,44 @@ def compute_prefix(pat):  # คำนวณตาราง prefix function (pi) 
     return pi  # คืนค่าตาราง prefix function
 
 
-def naive_search_lr(pat, text):  # ค้นหา pattern ใน text แบบ naive จากซ้ายไปขวา
+def naive_search_lr_wrap(pat, text):  # ค้นหา pattern ใน text แบบ naive จากซ้ายไปขวา
     m = len(pat)  # ความยาวของ pattern
     n = len(text)  # ความยาวของ text
+    text_wrap = text + text[:m - 1]  # ต่อ text เพื่อรองรับการวนรอบ
     res = []  # เก็บตำแหน่งที่พบ match (1-based)
-    for s in range(0, n - m + 1):  # วนตำแหน่งเริ่มต้น s ใน text
+    for s in range(n + m - 1):  # วนตำแหน่งเริ่มต้น s ใน text
         ok = True  # สมมติว่าแมตช์ได้
         for j in range(m):  # วนตำแหน่ง j ใน pattern
-            if text[s + j] != pat[j]:  # ถ้าไม่แมตช์/ถ้ามีตัวอักษรไม่ตรงกัน
+            if text_wrap[(s + j) % n] != pat[j]:  # ถ้าไม่แมตช์/ถ้ามีตัวอักษรไม่ตรงกัน
                 ok = False  # ยกเลิกการแมตช์
                 break
         if ok:  # ถ้าแมตช์ได้
-            res.append(s + 1)  # บันทึกตำแหน่งเริ่มต้น (1-based)
-    return res  # คืนค่าลิสต์ตำแหน่งที่พบ match
+            res.append((s % n) + 1)  # บันทึกตำแหน่งเริ่มต้น (1-based)
+    return sorted(set(res))  # คืนค่าลิสต์ตำแหน่งที่พบ match
 
 
-def naive_search_rl_via_rev(
+def naive_search_rl_wrap(
     pat, text
 ):  # ค้นหา pattern แบบย้อนกลับ (Right-to-Left) โดยการพลิก pattern ก่อน
     pat_rev = pat[::-1]  # พลิกลำดับ pattern
     m = len(pat)  # ความยาวของ pattern
     n = len(text)  # ความยาวของ text
-    res_a = []  # เก็บตำแหน่งเริ่มต้นของ match กับ pat_rev (1-based)
-    for s in range(0, n - m + 1):  # วนตำแหน่งเริ่มต้น s ใน text
+    text_wrap = text + text[:m - 1] # ต่อ text เพื่อรองรับการวนรอบ
+    res = []  # เก็บตำแหน่งเริ่มต้นของ match กับ pat_rev (1-based)
+    for s in range(n + m - 1):  # วนตำแหน่งเริ่มต้น s ใน text
         ok = True
         for j in range(m):  # วนตำแหน่ง j ใน pat_rev
-            if text[s + j] != pat_rev[j]:  # ถ้าไม่แมตช์
+            if text_wrap[(s + j) % n] != pat_rev[j]:  # ถ้าไม่แมตช์
                 ok = False  # ยกเลิกการแมตช์
                 break
         if ok:  # ถ้าแมตช์ได้
-            res_a.append(s + 1)  # เก็บตำแหน่งของ pat_rev ใน text
-    return [a + m - 1 for a in res_a]  # แปลง a ให้เป็นตำแหน่งเริ่มต้นของการแมตช์ย้อนกลับใน text
+            end_pos = (s + m - 1) % n
+            res.append(end_pos + 1)  # บันทึกตำแหน่งสิ้นสุด (1-based)
+    return sorted(set(res))  # คืนค่าลิสต์ตำแหน่งที่พบ match
 
 
 def main():
-    file_path = "C:\\Users\\user\\Downloads\\8.8.txt"
+    file_path = "C:\\Users\\user\\Downloads\\8.7.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().splitlines() # อ่านบรรทัดทั้งหมดจากไฟล์
@@ -83,8 +86,8 @@ def main():
     pi = compute_prefix(pattern) # คำนวณตาราง prefix function
 
     # ค้นหา LR และ RL แบบ naive
-    lr_positions = naive_search_lr(pattern, text) # หา match แบบ LR
-    rl_positions = naive_search_rl_via_rev(pattern, text)  # หา match แบบ RL
+    lr_positions = naive_search_lr_wrap(pattern, text) # หา match แบบ LR
+    rl_positions = naive_search_rl_wrap(pattern, text)  # หา match แบบ RL
 
     matches = [] # รวมผลลัพธ์และเรียง
     for p in lr_positions:

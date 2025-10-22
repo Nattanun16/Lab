@@ -45,7 +45,7 @@ def kmp_search(pat, text):  # ค้นหา pattern ใน text โดยใ�
 
 
 def main():
-    file_path = "C:\\Users\\user\\Downloads\\8.8.txt"
+    file_path = "C:\\Users\\user\\Downloads\\8.7.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().splitlines() # อ่านบรรทัดทั้งหมดจากไฟล์
@@ -56,7 +56,6 @@ def main():
         print("ไฟล์ต้องมี 4 บรรทัด: charset, m n, pattern, text")
         return # ออกจากโปรแกรมถ้าบรรทัดไม่ครบ
 
-    line1 = lines[0].strip()  # charset line (ไม่ใช้ในโค้ดนี้)
     line2 = lines[1].strip()  # m n line
     line3 = lines[2].strip()  # pattern
     line4 = lines[3].strip()  # text
@@ -67,22 +66,25 @@ def main():
 
     # คำนวณ prefix table
     pi = compute_prefix(pattern) # คำนวณตาราง prefix function
+    print(" ".join(str(x) for x in pi)) # พิมพ์ตาราง prefix function
 
     # หา match แบบ LR
-    lr_positions = kmp_search(pattern, text) # ค้นหา pattern ใน text จากซ้ายไปขวา
+    text_extended = text + text  # ขยาย text ให้ wrap-around ได้
+    lr_all = kmp_search(pattern, text_extended)  # ค้นหา pattern ใน text ขยาย
+    lr_mapped = sorted({((p - 1) % n) + 1 for p in lr_all}) # แปลงตำแหน่งให้เป็นในช่วง 1 ถึง n และลบซ้ำ
+    
 
     # หา match แบบ RL
     pattern_rev = pattern[::-1] # พลิกลำดับ pattern
-    a_positions = kmp_search(pattern_rev, text) # ค้นหา pattern_rev ใน text
-    rl_positions = [a + m - 1 for a in a_positions] # แปลง a ให้เป็นตำแหน่งเริ่มต้นของการแมตช์ย้อนกลับใน text
+    rl_all = kmp_search(pattern_rev, text_extended) # ค้นหา pattern พลิกใน text ขยาย
+    rl_mapped = sorted({((p + m - 2) % n) + 1 for p in rl_all}) # แปลงตำแหน่งให้เป็นในช่วง 1 ถึง n และลบซ้ำ
+
 
     # รวมผลลัพธ์และเรียง
-    matches = [(p, "LR") for p in lr_positions] + [(p, "RL") for p in rl_positions] # รวมผลลัพธ์ทั้ง LR และ RL
+    matches = [(p, "LR") for p in lr_mapped] + [(p, "RL") for p in rl_mapped] # รวมผลลัพธ์
     matches.sort(key=lambda x: (x[0], 0 if x[1] == "LR" else 1)) # จัดเรียงผลลัพธ์ตามตำแหน่ง และถ้าตำแหน่งเท่ากันให้ LR มาก่อน RL
 
-    # แสดงผลตามโจทย์
-    print(" ".join(str(x) for x in pi)) # พิมพ์ตาราง prefix function
-    print(len(matches)) # พิมพ์จำนวนแมตช์ที่พบ
+    print(len(matches)) # พิมพ์จำนวน match ที่พบ
     for pos, d in matches: # พิมพ์ตำแหน่งและทิศทางของแต่ละการแมตช์
         print(f"{pos} {d}")
 
