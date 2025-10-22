@@ -57,35 +57,45 @@ def naive_search_rl_via_rev(
 
 
 def main():
+    file_path = "C:\\Users\\user\\Downloads\\8.1.txt"
     try:
-        line1 = input() # อ่านบรรทัดแรก (มักเป็น header หรือ charset line)
-    except EOFError:
-        return # จบโปรแกรมถ้าไม่มีอินพุต
-    line2 = input().strip() # อ่านบรรทัดที่สอง (ขนาด m และ n) แล้วตัดช่องว่างหัวท้าย
-    line3 = input().strip() # อ่านบรรทัดที่สาม (pattern) แล้วตัดช่องว่างหัวท้าย
-    line4 = input().strip() # อ่านบรรทัดที่สี่ (text) แล้วตัดช่องว่างหัวท้าย
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.read().strip().splitlines() # อ่านบรรทัดทั้งหมดจากไฟล์
+    except FileNotFoundError:
+        print(f"ไม่พบไฟล์: {file_path}") # แจ้งข้อผิดพลาดถ้าไฟล์ไม่พบ
+        return
 
-    parts = line2.split() # แยกขนาด m และ n
-    m = int(parts[0]) # แปลงจำนวนโทเค็นใน pattern เป็นจำนวนเต็ม
-    n = int(parts[1]) # แปลงจำนวนโทเค็นใน text เป็นจำนวนเต็ม
+    if len(lines) < 4: # ตรวจสอบว่ามีบรรทัดครบ 4 บรรทัดหรือไม่
+        print("ไฟล์ต้องมีอย่างน้อย 4 บรรทัด (charset, m n, pattern, text)")
+        return
+    line1 = lines[0].strip()  # เผื่อมี charset
+    line2 = lines[1].strip()  # m n line
+    line3 = lines[2].strip()  # pattern
+    line4 = lines[3].strip()  # text
+
+    parts = line2.split() # แยก m n
+    m = int(parts[0]) # แปลง string เป็น integer
+    n = int(parts[1]) # แปลง string เป็น integer
 
     pattern = parse_tokens(line3, expected_len=m) # แปลง pattern เป็นลิสต์โทเค็นหรือตัวอักษร
     text = parse_tokens(line4, expected_len=n) # แปลง text เป็นลิสต์โทเค็นหรือตัวอักษร
 
-    pi = compute_prefix(pattern)  # คำนวณตาราง prefix function
+    pi = compute_prefix(pattern) # คำนวณตาราง prefix function
 
-    lr_positions = naive_search_lr(pattern, text) # ค้นหา pattern ใน text จากซ้ายไปขวา (LR)
-    rl_positions = naive_search_rl_via_rev(pattern, text) # ค้นหา pattern แบบย้อนกลับ (RL)
+    # ค้นหา LR และ RL แบบ naive
+    lr_positions = naive_search_lr(pattern, text) # หา match แบบ LR
+    rl_positions = naive_search_rl_via_rev(pattern, text)  # หา match แบบ RL
 
-    matches = []  # ลิสต์เก็บรวมผลลัพธ์ทั้ง LR และ RL
+    matches = [] # รวมผลลัพธ์และเรียง
     for p in lr_positions:
-        matches.append((p, "LR")) # บันทึกตำแหน่งและทิศทาง LR
+        matches.append((p, "LR")) # เพิ่มตำแหน่ง LR
     for p in rl_positions:
-        matches.append((p, "RL"))  # บันทึกตำแหน่งและทิศทาง RL
+        matches.append((p, "RL")) # เพิ่มตำแหน่ง RL
     matches.sort(key=lambda x: (x[0], 0 if x[1] == "LR" else 1)) # จัดเรียงผลลัพธ์ตามตำแหน่ง และถ้าตำแหน่งเท่ากันให้ LR มาก่อน RL
 
+    # แสดงผลทางหน้าจอ
     print(" ".join(str(x) for x in pi)) # พิมพ์ตาราง prefix function
-    print(len(matches)) # พิมพ์จำนวนครั้งที่พบ pattern
+    print(len(matches)) # พิมพ์จำนวน match ที่พบ
     for pos, d in matches:
         print(f"{pos} {d}") # พิมพ์ตำแหน่งและทิศทางของแต่ละการแมตช์
 
