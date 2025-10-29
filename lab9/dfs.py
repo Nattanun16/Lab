@@ -1,124 +1,141 @@
 import sys
 
-# เพิ่มขีดจำกัดความลึกของ recursion สำหรับ DFS
-# (จำเป็นสำหรับกราฟที่มีความลึกมาก)
 sys.setrecursionlimit(200000)
 
 
-def dfs(u, adj, visited):
-    """
-    ฟังก์ชันมาตรฐาน Depth-First Search
-    u: โหนดปัจจุบัน
-    adj: Adjacency list ของกราฟ (G หรือ G_Transpose)
-    visited: set ของโหนดที่เคยเยี่ยมชมแล้ว
-    """
-    visited.add(u)  # ทำเครื่องหมายโหนด u ว่าเยี่ยมชมแล้ว แล้วเพิ่มลงใน set
-    for v in adj[u]:  # วนผ่านโหนดทุกเพื่อนบ้าน v ของโหนด u
-        if v not in visited:  # ถ้าโหนด v ยังไม่เคยเยี่ยมชม
-            dfs(v, adj, visited)  # เรียกตัวเองแบบ recursive (มาตรฐาน DFS) ซ้ำที่โหนด v
+# --- DFS มาตรฐาน ---
+def dfs(u, adj, visited, stack=None, collect=None):
+    visited.add(u)
+    if collect is not None:
+        collect.append(u)
+    for v in adj[u]:
+        if v not in visited:
+            dfs(v, adj, visited, stack, collect)
+    if stack is not None:
+        stack.append(u)
 
 
+# --- ฟังก์ชันหลัก ---
 def solve():
-    """
-    ฟังก์ชันหลักในการประมวลผล (อ่านจาก sys.stdin) และเก็บผลลัพธ์เพื่อพิมพ์ทีเดียวตอนท้าย
-    """
-    results = []  # ลิสต์สำหรับเก็บคำตอบของแต่ละ test case
+    results = []
+    case_num = 1
 
-    while True:  # วนลูปอ่าน test case จนกว่าจะเจอ EOF
+    while True:
         try:
-            # อ่าน N และ M จาก sys.stdin (ซึ่งจะถูกเปลี่ยนเป็นไฟล์)
-            line = (
-                sys.stdin.readline().split()
-            )  # อ่านบรรทัดถัดมา (string) แล้ว .split() เพื่อแยกเป็น token list
+            line = sys.stdin.readline().split()
             if not line:
-                break  # จบการทำงานถ้าไม่มีอินพุต
-
-            N, M = map(
-                int, line
-            )  # แปลง token list เป็นจำนวนเต็มสองค่า N (จำนวนโหนด) และ M (จำนวนขอบ)
-
-            # เงื่อนไขสิ้นสุดอินพุต
+                break
+            N, M = map(int, line)
             if N == 0 and M == 0:
-                break  # ถ้าพบ 0 0 ตามรูปแบบของปัญหาให้หยุดอ่าน (เป็นสัญญาณสิ้นสุดชุดข้อมูล)
+                break
 
-            # สร้าง Adjacency list
-            adj_G = [[] for _ in range(N + 1)]  # Adjacency list ของกราฟทิศทางปกติ
-            adj_T = [
-                [] for _ in range(N + 1)
-            ]  # Adjacency list ของกราฟทิศทางผกผัน (Transpose)
+            adj_G = [[] for _ in range(N + 1)]
+            adj_T = [[] for _ in range(N + 1)]
 
             for _ in range(M):
-                # อ่านข้อมูลถนนจาก sys.stdin
-                a, b, c = map(
-                    int, sys.stdin.readline().split()
-                )  # a: จุดเริ่มต้น, b: จุดปลายทาง, c: ประเภทถนน (1 = ทางเดียว a -> b, 2 = สองทาง a <-> b)
-                if c == 1:  # ทางเดียว: a -> b
-                    adj_G[a].append(b)  # ปกติ: a -> b
-                    adj_T[b].append(a)  # กลับทิศ: b -> a
-                elif c == 2:  # สองทาง: a <-> b
-                    adj_G[a].append(b)  # ปกติ: a -> b
-                    adj_G[b].append(a)  # ปกติ: b -> a
-                    adj_T[a].append(b)  # กลับทิศ: a -> b
-                    adj_T[b].append(a)  # กลับทิศ: b -> a
+                a, b, c = map(int, sys.stdin.readline().split())
+                if c == 1:  # one way
+                    adj_G[a].append(b)
+                    adj_T[b].append(a)
+                elif c == 2:  # two way
+                    adj_G[a].append(b)
+                    adj_G[b].append(a)
+                    adj_T[a].append(b)
+                    adj_T[b].append(a)
 
-            # --- เริ่มการตรวจสอบ SCC ---
+            # ----- ตรวจว่า strongly connected ไหม -----
+            visited_G = set()
+            dfs(1, adj_G, visited_G)
+            if len(visited_G) != N:
+                strongly = False
+            else:
+                visited_T = set()
+                dfs(1, adj_T, visited_T)
+                strongly = len(visited_T) == N
 
-            # ถ้า N=1 (โหนดเดียว) ถือว่า strongly connected แล้วใส่ "1" ใน results แล้ว continue ไปกรณีถัดไป
-            if N <= 1:
+            # ถ้า strongly connected แล้ว
+            if strongly:
                 results.append("1")
                 continue
 
-            # --- Pass 1: รัน DFS บน G (เริ่มจากโหนด 1) ---
-            visited_G = set() # set สำหรับเก็บโหนดที่เยี่ยมชมในกราฟ G
-            dfs(1, adj_G, visited_G) # เรียก DFS เริ่มจากโหนด 1
+            # ----- หา Strongly Connected Components (SCCs) -----
+            visited = set()
+            stack = []
+            for i in range(1, N + 1):
+                if i not in visited:
+                    dfs(i, adj_G, visited, stack)
 
-            if len(visited_G) != N: # ถ้าไม่สามารถเยี่ยมชมโหนดทั้งหมดได้
-                results.append("0") # ใส่ "0" ใน results แล้ว continue ไปเคสถัดไป
-                continue
+            visited.clear()
+            scc_list = []
+            scc_id = [0] * (N + 1)
+            curr_id = 0
+            while stack:
+                node = stack.pop()
+                if node not in visited:
+                    collect = []
+                    dfs(node, adj_T, visited, collect=collect)
+                    curr_id += 1
+                    for x in collect:
+                        scc_id[x] = curr_id
+                    scc_list.append(collect)
 
-            # --- Pass 2: รัน DFS บน G_T (เริ่มจากโหนด 1) ---
-            visited_T = set() # set สำหรับเก็บโหนดที่เยี่ยมชมในกราฟ G_Transpose
-            dfs(1, adj_T, visited_T) # เรียก DFS เริ่มจากโหนด 1
+            # ----- สร้างกราฟย่อ -----
+            scc_count = curr_id
+            outdeg = [0] * (scc_count + 1)
+            indeg = [0] * (scc_count + 1)
 
-            if len(visited_T) != N: # ถ้าไม่สามารถเยี่ยมชมโหนดทั้งหมดได้
-                results.append("0") # ใส่ "0" ใน results แล้ว continue ไปเคสถัดไป
-            else: # ถ้าเยี่ยมชมโหนดทั้งหมดได้ทั้งสองรอบ
-                results.append("1") # ใส่ "1" ใน results
+            for u in range(1, N + 1):
+                for v in adj_G[u]:
+                    if scc_id[u] != scc_id[v]:
+                        outdeg[scc_id[u]] += 1
+                        indeg[scc_id[v]] += 1
+
+            sources = sum(1 for i in range(1, scc_count + 1) if indeg[i] == 0)
+            sinks = sum(1 for i in range(1, scc_count + 1) if outdeg[i] == 0)
+            edges_needed = max(sources, sinks)
+
+            # ----- แสดงผล -----
+            print(f"Case #{case_num}: 0 (Not strongly connected)")
+            print(f"  SCCs found ({scc_count} total):")
+            for i, comp in enumerate(scc_list, start=1):
+                print(f"    Component {i}: {sorted(comp)}")
+
+            print(f"  -> ต้องเพิ่ม edge อย่างน้อย {edges_needed} เส้น")
+
+            # เพื่อให้เห็นภาพ จะเชื่อม source → sink แบบง่ายที่สุด
+            if edges_needed > 0:
+                sources_list = [i for i in range(1, scc_count + 1) if indeg[i] == 0]
+                sinks_list = [i for i in range(1, scc_count + 1) if outdeg[i] == 0]
+                new_edges = []
+                for i in range(edges_needed):
+                    u_comp = sinks_list[i % len(sinks_list)]
+                    v_comp = sources_list[i % len(sources_list)]
+                    new_edges.append((scc_list[u_comp - 1][0], scc_list[v_comp - 1][0]))
+
+                print("  แนะนำให้เพิ่ม edge:")
+                for a, b in new_edges:
+                    print(f"    {a} -> {b}")
+
+            print()
+            case_num += 1
 
         except EOFError:
             break
         except Exception as e:
-            # print(f"Error: {e}", file=sys.stderr) # สำหรับ debug
+            print(f"Error: {e}", file=sys.stderr)
             break
 
-    # พิมพ์คำตอบทั้งหมดออกทางหน้าจอ (Standard Output)
-    print("\n".join(results))
 
-
-# --- ส่วนหลักในการรันโปรแกรม ---
+# --- ส่วนหลักในการรัน ---
 if __name__ == "__main__":
-
-    # ชื่อไฟล์อินพุตที่ต้องการอ่าน
-    input_filename = "C:\\Users\\user\\Downloads\\Extra9.6.txt"
-
-    # เก็บ standard input เดิมไว้
+    input_filename = "C:\\Users\\user\\Downloads\\Extra9.5.txt"
     original_stdin = sys.stdin
-
     try:
-        # เปิดไฟล์และเปลี่ยน sys.stdin ให้ชี้ไปที่ไฟล์นี้
-        # โปรแกรมจะอ่านจากไฟล์นี้แทนการรอรับอินพุตจากคีย์บอร์ด
         sys.stdin = open(input_filename, "r")
-
-        # เรียกฟังก์ชัน solve()
         solve()
-
     except FileNotFoundError:
         print(f"Error: ไม่พบไฟล์ '{input_filename}'", file=sys.stderr)
-    except Exception as e:
-        print(f"An error occurred: {e}", file=sys.stderr)
     finally:
-        # ไม่ว่าจะเกิดอะไรขึ้น คืนค่า sys.stdin กลับเป็นเหมือนเดิม
-        # (สำคัญหากโปรแกรมนี้ถูก import ไปใช้ที่อื่น)
         if sys.stdin is not original_stdin:
             sys.stdin.close()
         sys.stdin = original_stdin
