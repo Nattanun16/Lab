@@ -128,7 +128,7 @@ def solve():
 
 # --- ส่วนหลักในการรัน ---
 if __name__ == "__main__":
-    input_filename = "C:\\Users\\user\\Downloads\\Extra9.5.txt"
+    input_filename = "C:\\Users\\user\\Downloads\\Extra9.6.txt"
     original_stdin = sys.stdin # เก็บ stdin เดิมไว้
     try:
         sys.stdin = open(input_filename, "r") # เปลี่ยน stdin ไปอ่านจากไฟล์
