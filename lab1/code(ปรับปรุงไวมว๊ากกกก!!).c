@@ -24,7 +24,7 @@ void prime_factors_naive(unsigned long long n, unsigned long long *count, unsign
 }
 
 // ห.ร.ม. แบบ naive
-unsigned long long find_gcd1(unsigned long long m, unsigned long long n, unsigned long long *operations)
+unsigned long long find_gcd1(unsigned long long m, unsigned long long n, unsigned long long *operations) // m: จำนวนแรก, n: จำนวนที่สอง, operations: ตัวนับการดำเนินการ
 {
     unsigned long long m_factors[MAX_FACTORS], n_factors[MAX_FACTORS]; // อาร์เรย์เก็บตัวประกอบเฉพาะของ m และ n
     unsigned long long m_size, n_size; // ขนาดของอาร์เรย์ factors
@@ -40,7 +40,7 @@ unsigned long long find_gcd1(unsigned long long m, unsigned long long n, unsigne
             if (m_factors[i] == n_factors[j] && n_factors[j] != 0) // ถ้าตัวประกอบเฉพาะตรงกันและยังไม่ถูกใช้
             {
                 gcd *= m_factors[i]; // คูณห.ร.ม. ด้วยตัวประกอบเฉพาะนั้น
-                n_factors[j] = 0; // ทำเครื่องหมายตัวประกอบเฉพาะของ n ว่าใช้แล้ว
+                n_factors[j] = 0; // ทำเครื่องหมายที่ตัวประกอบเฉพาะของ n ว่าใช้แล้ว
                 break; // ออกจากลูปภายใน
             }
         }
@@ -50,7 +50,7 @@ unsigned long long find_gcd1(unsigned long long m, unsigned long long n, unsigne
 }
 
 // หาตัวประกอบเฉพาะโดยใช้ trial division (เวอร์ชันปรับปรุง)
-void prime_factors_trial(unsigned long long n, unsigned long long *count, unsigned long long *factors, unsigned long long *size)
+void prime_factors_trial(unsigned long long n, unsigned long long *count, unsigned long long *factors, unsigned long long *size) // n: จำนวนที่ต้องการหาตัวประกอบเฉพาะ, count: ตัวนับจำนวนการดำเนินการ, factors: อาร์เรย์เก็บตัวประกอบเฉพาะ, size: ขนาดของอาร์เรย์ factors
 {
     *size = 0; // เริ่มต้นขนาดเป็น 0
 
@@ -73,8 +73,8 @@ void prime_factors_trial(unsigned long long n, unsigned long long *count, unsign
         }
     }
 
-    // ถ้าเหลือเศษ > 1 แปลว่าเป็น prime ตัวสุดท้าย
-    if (n > 1) // ถ้า n ยังเหลือค่ามากกว่า 1 แปลว่าเป็นจำนวนเฉพาะตัวสุดท้าย
+    // ถ้าเหลือเศษ > 1 แปลว่าเป็นจำนวนเฉพาะตัวสุดท้าย
+    if (n > 1)
     {
         factors[(*size)++] = n; // เก็บตัวประกอบเฉพาะสุดท้าย
         (*count)++; // เพิ่มตัวนับการดำเนินการ
@@ -82,10 +82,10 @@ void prime_factors_trial(unsigned long long n, unsigned long long *count, unsign
 }
 
 // ห.ร.ม. โดยใช้ trial division
-unsigned long long find_gcd2(unsigned long long m, unsigned long long n, unsigned long long *operations) 
+unsigned long long find_gcd2(unsigned long long m, unsigned long long n, unsigned long long *operations) // m: จำนวนแรก, n: จำนวนที่สอง, operations: ตัวนับการดำเนินการ
 {
-    unsigned long long m_factors[MAX_FACTORS], n_factors[MAX_FACTORS];
-    unsigned long long m_size, n_size;
+    unsigned long long m_factors[MAX_FACTORS], n_factors[MAX_FACTORS]; // อาร์เรย์เก็บตัวประกอบเฉพาะของ m และ n
+    unsigned long long m_size, n_size; // ขนาดของอาร์เรย์ factors
 
     prime_factors_trial(m, operations, m_factors, &m_size); // หาตัวประกอบเฉพาะของ m
     prime_factors_trial(n, operations, n_factors, &n_size); // หาตัวประกอบเฉพาะของ n
