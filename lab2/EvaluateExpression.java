@@ -1,7 +1,7 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.util.Stack;
+import java.io.File; // สำหรับจัดการไฟล์
+import java.io.FileNotFoundException; // สำหรับจัดการข้อผิดพลาดเมื่อหาไฟล์ไม่เจอ
+import java.util.Scanner; // สำหรับอ่านไฟล์
+import java.util.Stack; // สำหรับใช้สแต็ก
 
 public class EvaluateExpression { // ประเมินผลนิพจน์ทางคณิตศาสตร์จากไฟล์
 

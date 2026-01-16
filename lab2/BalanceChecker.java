@@ -1,7 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Stack;
+import java.io.BufferedReader; // สำหรับอ่านไฟล์
+import java.io.FileReader; // สำหรับอ่านไฟล์
+import java.io.IOException; // สำหรับจัดการข้อผิดพลาดในการอ่านไฟล์
+import java.util.Stack; // สำหรับใช้สแต็ก
 
 public class BalanceChecker { // ตรวจสอบความสมดุลของวงเล็บในโค้ด Python
     public static boolean isBalanced(String code) { // รับสตริงโค้ด Python

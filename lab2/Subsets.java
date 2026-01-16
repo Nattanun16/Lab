@@ -1,10 +1,10 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File; // สำหรับจัดการไฟล์
+import java.io.FileNotFoundException; // สำหรับจัดการข้อผิดพลาดเมื่อหาไฟล์ไม่เจอ
+import java.util.ArrayList; // สำหรับใช้ ArrayList
+import java.util.List; // สำหรับใช้ List
+import java.util.Scanner; // สำหรับอ่านไฟล์
+import java.util.regex.Matcher; // สำหรับ regex matching
+import java.util.regex.Pattern; // สำหรับ regex pattern
  //ใช้ Array กับ ArrayList
 public class Subsets {
     // สำหรับเซตของจำนวนเต็ม (เช่น {1,2,3})
