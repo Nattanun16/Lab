@@ -89,8 +89,8 @@ def find_gcd3(m, n, operations):
 
 
 def main():
-    x = 953_525_754_641
-    y = 658_518_571_823
+    x = 111
+    y = 234
 
     ops1 = [0]
     ops2 = [0]
