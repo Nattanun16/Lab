@@ -24,6 +24,7 @@ def brute_force(
 
         # ถ้าพิจารณา Grab ครบทุกคันแล้ว
         if g_index == len(grabs):  # ตรวจสอบว่า g_index เท่ากับความยาวของ grabs หรือไม่
+            sol = tuple(sorted(matching))  # ทำให้ไม่ซ้ำ
             if count > max_rides:  # ถ้าจำนวนผู้โดยสารที่รับได้ในปัจจุบัน มากกว่า max_rides
                 max_rides = count  # อัปเดตค่า max_rides
                 solutions = {
@@ -62,18 +63,22 @@ def brute_force(
     return (
         len(solutions),
         max_rides,
-    )  # คืนค่าจำนวนชุด solutions และจำนวนผู้โดยสารสูงสุดที่สามารถรับได้
+        solutions
+    )  # คืนค่าจำนวนชุดวิธีการจับคู่ (Grab–Passenger) ที่ทำให้ได้จำนวนผู้โดยสารสูงสุด และจำนวนผู้โดยสารสูงสุด
 
 
 if __name__ == "__main__":
-    with open("C:\\Users\\user\\Downloads\\2.1.2.txt") as f:
+    with open("C:\\Users\\user\\Downloads\\2.2.2.txt") as f:
         arr = f.readline().strip()
         k = int(f.readline().strip())
 
-    num_solutions, max_passengers = brute_force(
+    num_solutions, max_passengers, solutions = brute_force(
         arr, k
     )  # เรียกใช้ฟังก์ชัน brute_force กับข้อมูลที่อ่านมา
     print(
         num_solutions
     )  # แสดงผลจำนวนชุดวิธีการจับคู่ (Grab–Passenger) ที่ทำให้ได้จำนวนผู้โดยสารสูงสุด
     print(max_passengers)  # แสดงผลจำนวนผู้โดยสารสูงสุดที่สามารถขึ้น Grab ได้ ด้วยวิธี Brute-force
+    print("Matchings:")
+    for solution in solutions:
+        print(solution)  # แสดงรายละเอียดการจับคู่ (Grab–Passenger) ในแต่ละชุดวิธีการจับคู่

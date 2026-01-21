@@ -11,6 +11,7 @@ def greedy(
 
     used = set()  # เซ็ต used เพื่อเก็บ Passenger ที่ถูกใช้แล้ว
     count = 0  # ตัวแปร count เพื่อเก็บจำนวนผู้โดยสารที่สามารถรับได้
+    matching = []  # ลิสต์ matching เพื่อเก็บชุดของการจับคู่ (Grab–Passenger)
 
     for g in grabs:  # วนลูปผ่าน Grab แต่ละคัน
         # หา Passenger ที่อยู่ในระยะ และยังไม่ถูกใช้
@@ -22,15 +23,26 @@ def greedy(
             # เลือก Passenger ที่อยู่ซ้ายที่สุด
             chosen = min(candidates)
             used.add(chosen)  # ทำเครื่องหมาย Passenger ว่าได้ถูกใช้แล้ว
+            matching.append((g, chosen))  # เพิ่มการจับคู่ (Grab–Passenger) ลงใน matching
             count += 1  # เพิ่มจำนวนผู้โดยสารที่รับได้
-
-    return count  # คืนค่าจำนวนผู้โดยสารสูงสุดที่สามารถรับได้
+    num_solutions = (
+        1 if count > 0 else 0
+    )  # ในวิธี Greedy จะมีเพียงชุดการจับคู่เดียวถ้ามีผู้โดยสารที่รับได้
+    return (
+        num_solutions,
+        count,
+        matching,
+    )  # คืนค่าจำนวนผู้โดยสารสูงสุดที่สามารถรับได้ และชุดของการจับคู่
 
 
 if __name__ == "__main__":
-    with open("C:\\Users\\user\\Downloads\\2.1.3.txt") as f:
+    with open("C:\\Users\\user\\Downloads\\2.2.1.txt") as f:
         arr = f.readline().strip()
         k = int(f.readline().strip())
 
-    max_passengers = greedy(arr, k)  # เรียกใช้ฟังก์ชัน greedy กับข้อมูลที่อ่านมา
+    num_solutions, max_passengers, matching = greedy(
+        arr, k
+    )  # เรียกใช้ฟังก์ชัน greedy กับข้อมูลที่อ่านมา
+    print(num_solutions)  # จำนวนชุดวิธีการจับคู่
     print(max_passengers)  # แสดงผลจำนวนผู้โดยสารสูงสุดที่สามารถขึ้น Grab ได้ ด้วยวิธี Greedy
+    print(matching)  # รายละเอียดการจับคู่
