@@ -17,7 +17,7 @@ def coin_change_ways_list(amount, coins):
         for i in range(start, len(coins)): #ลูปผ่านเหรียญแต่ละตัว เริ่มจากตำแหน่ง start (เพื่อไม่ให้ซ้ำวิธีเดิม) และ len(coins) (เพื่อให้ใช้เหรียญได้ทุกตัว)
             path.append(coins[i]) #เพิ่มเหรียญตัวนี้ในวิธีทอนเงินปัจจุบัน
             backtrack(remaining - coins[i], i, path) #recursive, ใช้เหรียญตัวเดิมซ้ำได้
-            path.pop() #เอาเหรียญตัวนี้ออกจากวิธีทอนเงินปัจจุบัน (backtrack) เพื่อ explore วิธีถัดไป
+            path.pop() #เอาเหรียญตัวนี้ออกจากวิธีทอนเงินปัจจุบัน (backtrack) เพื่อหาวิธีถัดไป
 
     backtrack(amount, 0, []) #เริ่มต้น backtracking ด้วยจำนวนเงินที่ต้องการ, ตำแหน่งเริ่มต้น 0, และวิธีทอนเงินว่างเปล่า
     return result #คืนค่ารายการวิธีทอนเงินทั้งหมด

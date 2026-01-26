@@ -25,12 +25,12 @@ def min_coin_change(amount, coins): #หาจำนวนเหรียญ น
     for i in range(len(coins) + 1):
         lookup[i][0] = 0  # ต้องการเงิน 0 ใช้เหรียญ 0 เหรียญ
 
-    for i in range(1, len(coins) + 1):
-        for j in range(1, amount + 1):
-            if coins[i - 1] <= j:
-                lookup[i][j] = min(lookup[i - 1][j], 1 + lookup[i][j - coins[i - 1]])
-            else:
-                lookup[i][j] = lookup[i - 1][j]
+    for i in range(1, len(coins) + 1): #ลูปผ่านเหรียญแต่ละตัว
+        for j in range(1, amount + 1): #ลูปผ่านจำนวนเงินตั้งแต่ 1 ถึง amount
+            if coins[i - 1] <= j: #ถ้าเหรียญตัวนี้สามารถใช้ได้
+                lookup[i][j] = min(lookup[i - 1][j], 1 + lookup[i][j - coins[i - 1]]) #เลือกใช้เหรียญตัวนี้หรือไม่ใช้
+            else: #ถ้าเหรียญตัวนี้ใช้ไม่ได้
+                lookup[i][j] = lookup[i - 1][j] #ไม่ใช้เหรียญตัวนี้
 
     return dp[amount], used_coins, lookup #คืนค่าจำนวนเหรียญที่ใช้, รายการเหรียญที่ใช้, และตาราง lookup
 
@@ -38,9 +38,9 @@ def min_coin_change(amount, coins): #หาจำนวนเหรียญ น
 def run_from_file(filename): #อ่านข้อมูลจากไฟล์และแสดงผลลัพธ์
     import os, sys
     # ตั้งค่า stdout เป็น UTF-8 เพื่อรองรับไทยบน Windows
-    if os.name == "nt": 
-        import io
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    if os.name == "nt": # ถ้าเป็น Windows
+        import io # รองรับ UTF-8 บน Windows
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8") #รองรับ UTF-8 บน Windows
 
     with open(filename, "r", encoding="utf-8") as f: #เปิดไฟล์ด้วย encoding UTF-8
         lines = [line.strip() for line in f if line.strip()] #อ่านบรรทัดทั้งหมดในไฟล์และลบช่องว่าง
@@ -69,4 +69,4 @@ def run_from_file(filename): #อ่านข้อมูลจากไฟล�
 
 
 if __name__ == "__main__":
-    run_from_file("C:\\Users\\user\\Downloads\\5.1.txt")
+    run_from_file("C:\\Users\\user\\Downloads\\3.1.txt")
