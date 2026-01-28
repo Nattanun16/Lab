@@ -36,26 +36,33 @@ def coin_change_ways_dp(amount, coins):
 
 
 def run_from_file(filename): #อ่านข้อมูลจากไฟล์และแสดงผลลัพธ์
-    with open(filename, "r", encoding="utf-8") as f: #เปิดไฟล์ด้วย encoding UTF-8
-        lines = [line.strip() for line in f if line.strip()] #อ่านบรรทัดทั้งหมดในไฟล์และลบช่องว่าง
+    try:
+        with open(filename, "r", encoding="utf-8") as f: #เปิดไฟล์ด้วย encoding UTF-8
+            lines = [line.strip() for line in f if line.strip()] #อ่านบรรทัดทั้งหมดในไฟล์และลบช่องว่าง
+    except FileNotFoundError:
+        print(f"Error: ไม่พบไฟล์ที่ตำแหน่ง {filename}")
+        return
 
     for i in range(0, len(lines), 2): #ลูปผ่านบรรทัดทีละ 2 บรรทัด
-        amount = int(lines[i]) #จำนวนเงินที่ต้องการทอน
-        coins = list(map(int, lines[i + 1].split())) #รายการเหรียญที่มีอยู่
+        try:
+            amount = int(lines[i]) #จำนวนเงินที่ต้องการทอน
+            coins = list(map(int, lines[i + 1].split())) #รายการเหรียญที่มีอยู่
+            print("=" * 40) #แสดงเส้นคั่น
+            print(f"Amount = {amount}") #แสดงจำนวนเงินที่ต้องการทอน
+            print(f"coins [] = {coins}") #แสดงรายการเหรียญที่มีอยู่
 
-        print("=" * 40) #แสดงเส้นคั่น
-        print(f"Amount = {amount}") #แสดงจำนวนเงินที่ต้องการทอน
-        print(f"coins [] = {coins}") #แสดงรายการเหรียญที่มีอยู่
-
-        if amount <= 20:
-            # ใช้ Backtracking แจกแจงทุกวิธี
-            ways = coin_change_ways_list(amount, coins) #เรียกใช้ฟังก์ชันแจกแจงวิธีทอนเงิน
-            print(f"Ways to make change = {len(ways)}") #แสดงจำนวนวิธีทอนเงินที่เจอ
-            print(" ".join("{" + ",".join(map(str, w)) + "}" for w in ways)) #แสดงวิธีทอนเงินทั้งหมดในรูปแบบที่กำหนด
-        else:
-            # ใช้ DP คำนวณจำนวนวิธี
-            ways = coin_change_ways_dp(amount, coins) #เรียกใช้ฟังก์ชันหาจำนวนวิธีทอนเงิน
-            print(f"Ways to make change = {ways} (too many to list)") #แสดงจำนวนวิธีทอนเงินที่เจอ พร้อมข้อความว่า "too many to list"
+            if amount <= 20: #ถ้าจำนวนวิธีทอนเงินน้อยกว่าหรือเท่ากับ 20
+                # ใช้ Backtracking แจกแจงทุกวิธี
+                ways = coin_change_ways_list(amount, coins) #เรียกใช้ฟังก์ชันแจกแจงวิธีทอนเงิน
+                formatted_ways = " ".join("{" + ",".join(map(str, w)) + "}" for w in ways)#จัดรูปแบบวิธีทอนเงินให้อยู่ในรูปแบบที่กำหนด
+                print(f"Ways to make change = {len(ways)} {formatted_ways}") #แสดงจำนวนวิธีทอนเงินที่เจอ
+            else:
+                # ใช้ DP คำนวณจำนวนวิธี
+                ways = coin_change_ways_dp(amount, coins) #เรียกใช้ฟังก์ชันหาจำนวนวิธีทอนเงิน
+                print(f"Ways to make change = {ways} (too many to list)") #แสดงจำนวนวิธีทอนเงินที่เจอ พร้อมข้อความว่า "too many to list"
+        except (ValueError, IndexError):
+            print(f"Error: รูปแบบข้อมูลในไฟล์บรรทัดที่ {i+1} หรือ {i+2} ไม่ถูกต้อง")
+        
 
 
 if __name__ == "__main__":

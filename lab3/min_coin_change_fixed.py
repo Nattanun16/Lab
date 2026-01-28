@@ -69,4 +69,4 @@ def run_from_file(filename): #อ่านข้อมูลจากไฟล�
 
 
 if __name__ == "__main__":
-    run_from_file("C:\\Users\\user\\Downloads\\3.1.txt")
+    run_from_file("C:\\Users\\user\\Downloads\\3.2.txt")
