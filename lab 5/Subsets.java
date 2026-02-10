@@ -5,7 +5,8 @@ import java.util.List; // สำหรับใช้ List
 import java.util.Scanner; // สำหรับอ่านไฟล์
 import java.util.regex.Matcher; // สำหรับ regex matching
 import java.util.regex.Pattern; // สำหรับ regex pattern
- //ใช้ Array กับ ArrayList
+//ใช้ Array กับ ArrayList
+
 public class Subsets {
     // สำหรับเซตของจำนวนเต็ม (เช่น {1,2,3})
     public static void generateSubsets(int[] set) { // รับ array ของจำนวนเต็ม
@@ -26,18 +27,17 @@ public class Subsets {
             sb.append("}"); // ปิดท้ายด้วย }
             System.out.println(sb.toString()); // พิมพ์ผลลัพธ์
         }
-        // **ตัดส่วนพิมพ์ singleton sets ออก** ตามที่คุณไม่ต้องการ
     }
 
     // สำหรับเซตที่สมาชิกเป็นเซตย่อย (เช่น { {1}, {2}, {3} })
     public static void generateSubsetsOfTokens(String[] tokens) { // รับ array ของสตริง
-        int n = tokens.length; // number of elements
-        int total = 1 << n; // 2^n subsets
-        for (int i = 0; i < total; i++) {  // for each subset
-            StringBuilder sb = new StringBuilder(); // build subset string
+        int n = tokens.length; // number of elements คือ จำนวนสมาชิกในเซต
+        int total = 1 << n; // 2^n เซตย่อย
+        for (int i = 0; i < total; i++) { // สำหรับแต่ละเซตย่อย
+            StringBuilder sb = new StringBuilder(); // สร้างสตริงสำหรับเซตย่อย
             sb.append("{"); // เริ่มต้นด้วย {
             boolean first = true; // ตัวแปรช่วยจัดการคั่น
-            for (int j = 0; j < n; j++) { // for each element
+            for (int j = 0; j < n; j++) { // สำหรับแต่ละสมาชิก
                 if ((i & (1 << j)) > 0) { // ถ้า element j อยู่ใน subset นี้
                     if (!first) // คั่นด้วยช่องว่าง
                         sb.append(","); // คั่นด้วย ,
@@ -46,7 +46,7 @@ public class Subsets {
                 }
             }
             sb.append("}"); // ปิดท้ายด้วย }
-            System.out.println(sb.toString()); //   พิมพ์ผลลัพธ์
+            System.out.println(sb.toString()); // พิมพ์ผลลัพธ์
         }
     }
 
@@ -56,7 +56,7 @@ public class Subsets {
     }
 
     public static void main(String[] args) throws FileNotFoundException { // อ่านไฟล์ SetT.txt
-        try (Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\SetT.txt"))) { 
+        try (Scanner sc = new Scanner(new File("C:\\Users\\user\\Downloads\\SetT.txt"))) {
             while (sc.hasNextLine()) { // อ่านทีละบรรทัด
                 String line = sc.nextLine().trim(); // อ่านบรรทัดปัจจุบันและตัดช่องว่างข้างหน้า-หลัง
                 if (line.equals("{}") || line.isEmpty()) { // กรณีเซตว่าง {}
@@ -68,11 +68,11 @@ public class Subsets {
                 // กรณีเป็นเซตของเซต เช่น {{1},{2},{3}}
                 if (isSetOfSingletonSets(line)) { // ตรวจสอบรูปแบบ
                     Pattern p = Pattern.compile("\\{\\s*(-?\\d+)\\s*\\}"); // รูปแบบ {number}
-                    Matcher m = p.matcher(line); // สร้าง matcher
+                    Matcher m = p.matcher(line); // สร้าง matcher matcher คือ object ที่ใช้ตรวจสอบ pattern
                     List<String> tokens = new ArrayList<>(); // เก็บสมาชิกแต่ละตัว
                     while (m.find()) { // หา match
                         String num = m.group(1).trim(); // ดึงตัวเลขออกมา
-                        tokens.add("{" + num + "}"); // เก็บในรูปแบบ "{number"
+                        tokens.add("{" + num + "}"); // เก็บในรูปแบบ "{number}"
                     }
                     System.out.println("Subsets of " + line + " :"); // พิมพ์หัวข้อ
                     generateSubsetsOfTokens(tokens.toArray(String[]::new)); // พิมพ์เซตย่อย
