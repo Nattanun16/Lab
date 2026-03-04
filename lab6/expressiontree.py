@@ -1,4 +1,5 @@
 import operator
+import re
 
 
 # Node class for Expression Tree
@@ -19,10 +20,9 @@ def infix_to_postfix(expression):  # แปลงนิพจน์จาก inf
     precedence = {"+": 1, "-": 1, "*": 2, "/": 2}  # กำหนดลำดับความสำคัญของตัวดำเนินการ
     output = []  # เก็บผลลัพธ์ของนิพจน์ในรูปแบบ postfix
     stack = []  # เก็บตัวดำเนินการระหว่างการแปลง
-    tokens = (
-        expression.replace("(", " ( ").replace(")", " ) ").split()
-    )  # แยกสมการเป็นรายการ โดยเว้นวรรครอบวงเล็บเพื่อให้แยก token ได้ง่าย
-
+    tokens = re.findall(
+        r"\d+|[()+\-*/]", expression
+    )  # แยกสมการเป็นรายการ โดยใช้ regular expression เพื่อแยกตัวเลขและตัวดำเนินการ
     for token in tokens:
         if token.isdigit():
             output.append(token)  # ถ้า token เป็นตัวเลข (operand) จะส่งออกไปที่ output ทันที
@@ -113,6 +113,7 @@ def evaluate_postorder(postfix):
 
 # Main Program
 def process_expression(expression):  # ฟังก์ชันหลักในการประมวลผลนิพจน์
+    expression = expression.replace("–", "-")  # แทนที่เครื่องหมายลบแบบยาวด้วยเครื่องหมายลบปกติ
     postfix = infix_to_postfix(expression)  # แปลงนิพจน์จาก infix เป็น postfix
     tree_root = build_expression_tree(
         postfix
