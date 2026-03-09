@@ -54,7 +54,7 @@ def naive_search_rl_wrap(
                 ok = False  # ยกเลิกการแมตช์
                 break
         if ok:  # ถ้าแมตช์ได้
-            end_pos = (s + m - 1) % n
+            end_pos = (s + m - 1) % n # ตำแหน่งสิ้นสุดของ match ใน text (0-based)
             res.append(end_pos + 1)  # บันทึกตำแหน่งสิ้นสุด (1-based)
     return sorted(set(res))  # คืนค่าลิสต์ตำแหน่งที่พบ match
 

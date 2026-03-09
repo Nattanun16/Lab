@@ -53,36 +53,44 @@ def naive_search_rl_via_rev(pat, text):
     return [a + m - 1 for a in res_a]
 
 
-def plot_prefix_table(pi):
-    plt.figure(figsize=(8, 4))
-    plt.plot(range(1, len(pi) + 1), pi, marker="o", linestyle="-", color="blue")
+def plot_prefix_table(pi):  # แสดงกราฟของตาราง prefix function (pi)
+    plt.figure(figsize=(8, 4))  # กำหนดขนาดของกราฟ
+    plt.plot(
+        range(1, len(pi) + 1), pi, marker="o", linestyle="-", color="blue"
+    )  # วาดกราฟเส้นของค่า pi ตามตำแหน่ง pattern
     plt.title("Prefix Function Table (pi)")
     plt.xlabel("Pattern Position")
     plt.ylabel("Prefix Length")
-    plt.grid(True)
-    plt.xticks(range(1, len(pi) + 1))
-    plt.tight_layout()
+    plt.grid(True)  # แสดงเส้นตารางเพื่อให้อ่านค่าบนกราฟง่ายขึ้น
+    plt.xticks(range(1, len(pi) + 1))  # กำหนดตำแหน่งของแกน x ให้ตรงกับตำแหน่งของ pattern
+    plt.tight_layout()  # ปรับ layout ให้เหมาะสมก่อนแสดงกราฟ
     plt.show()
 
 
-def plot_match_positions(matches, n):
-    plt.figure(figsize=(10, 4))
-    positions = [pos for pos, _ in matches]
-    directions = [1 if d == "LR" else -1 for _, d in matches]
-    colors = ["green" if d == "LR" else "red" for _, d in matches]
+def plot_match_positions(matches, n):  # แสดงกราฟของตำแหน่งที่พบ match ใน text
+    plt.figure(figsize=(10, 4))  # กำหนดขนาดของกราฟ
+    positions = [pos for pos, _ in matches]  # ดึงตำแหน่งที่พบ match ออกมา
+    directions = [
+        1 if d == "LR" else -1 for _, d in matches
+    ]  # กำหนดทิศทางของ match (LR = 1, RL = -1)
+    colors = [
+        "green" if d == "LR" else "red" for _, d in matches
+    ]  # กำหนดสีของจุด (LR = เขียว, RL = แดง)
 
-    plt.scatter(positions, directions, c=colors, s=100)
-    plt.yticks([-1, 1], ["RL", "LR"])
-    plt.xticks(range(1, n + 1))
+    plt.scatter(
+        positions, directions, c=colors, s=100
+    )  # วาดจุดบนกราฟตามตำแหน่งและทิศทางของ match
+    plt.yticks([-1, 1], ["RL", "LR"])  # กำหนดป้ายแกน y ให้แสดงทิศทางของ match
+    plt.xticks(range(1, n + 1))  # กำหนดตำแหน่งของแกน x ให้ตรงกับตำแหน่งใน text
     plt.title("Match Positions in Text")
     plt.xlabel("Text Position (1-based)")
     plt.grid(True)
-    plt.tight_layout()
+    plt.tight_layout()  # ปรับ layout ให้เหมาะสมก่อนแสดงกราฟ
     plt.show()
 
 
 def main():
-    file_path = "C:\\Users\\user\\Downloads\\8.1.txt"
+    file_path = "C:\\Users\\user\\Downloads\\7_example.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().splitlines()
@@ -118,14 +126,13 @@ def main():
     matches.sort(key=lambda x: (x[0], 0 if x[1] == "LR" else 1))
 
     # แสดงผลข้อความ
-    print(" ".join(str(x) for x in pi))
-    print(len(matches))
-    for pos, d in matches:
-        print(f"{pos} {d}")
+    print(" ".join(str(x) for x in pi))  # พิมพ์ตาราง prefix function
+    print(len(matches))  # พิมพ์จำนวน match ที่พบ
+    for pos, d in matches:  # พิมพ์ตำแหน่งและทิศทางของแต่ละการแมตช์
+        print(f"{pos} {d}")  # พิมพ์ตำแหน่งและทิศทางของแต่ละการแมตช์
 
-    # ✅ แสดง Visualization
-    plot_prefix_table(pi)
-    plot_match_positions(matches, n)
+    plot_prefix_table(pi)  # แสดงกราฟของตาราง prefix function
+    plot_match_positions(matches, n)  # แสดงกราฟของตำแหน่งที่พบ match ใน text
 
 
 if __name__ == "__main__":
