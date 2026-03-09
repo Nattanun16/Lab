@@ -1,6 +1,6 @@
 import operator  # นำเข้าโมดูล operator เพื่อใช้ฟังก์ชันทางคณิตศาสตร์
-import re
-from sys import prefix  # นำเข้าโมดูล re เพื่อใช้ในการแยกสมการเป็น token
+import re # นำเข้าโมดูล re เพื่อใช้ในการแยกสมการเป็น token
+from sys import prefix  # นำเข้า prefix จาก sys เพื่อใช้ในการแสดงโครงสร้างของต้นไม้
 
 
 class Node:
