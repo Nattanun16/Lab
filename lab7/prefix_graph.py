@@ -82,7 +82,7 @@ def plot_match_positions(matches, n): # ฟังก์ชันสำหรั�
 
 
 def main():
-    file_path = "C:\\Users\\user\\Downloads\\8.1.txt"
+    file_path = "C:\\Users\\user\\Downloads\\7_example.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().splitlines()
