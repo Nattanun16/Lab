@@ -60,7 +60,7 @@ def naive_search_rl_wrap(
 
 
 def main():
-    file_path = "C:\\Users\\user\\Downloads\\7.1.txt"
+    file_path = "C:\\Users\\user\\Downloads\\7.5.txt"
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.read().strip().splitlines()  # อ่านบรรทัดทั้งหมดจากไฟล์
