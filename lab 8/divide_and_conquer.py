@@ -18,7 +18,7 @@ def base_divide_and_conquer(n):
     """ลำดับตั้งแต่ 0 ถึง n (ต้นแบบที่ใช้ภายใน)"""
     if n == 0: 
         return [0] # Base case
-    prev = base_divide_and_conquer(n // 2) # เรียกตัวเองกับ n//2
+    prev = base_divide_and_conquer(n // 2) # เรียกตัวเองกับ n//2 เพื่อแบ่งช่วงครึ่งหนึ่ง prev ย่อมาจาก previous sequence
     evens = [x * 2 for x in prev if x * 2 <= n] # สร้างเลขคู่
     odds = [x * 2 + 1 for x in prev if x * 2 + 1 <= n] # สร้างเลขคี่
     return evens + odds # รวมเลขคู่และเลขคี่
