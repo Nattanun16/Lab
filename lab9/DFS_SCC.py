@@ -54,7 +54,7 @@ def solve():
 
 
 if __name__ == "__main__":
-    input_filename = "lab9.txt"
+    input_filename = "C:\\Users\\user\\Downloads\\lab9.txt"
 
     try:
         with open(input_filename, "r") as f:
